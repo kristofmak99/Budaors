@@ -83,11 +83,73 @@
             font-size: 22px;
         }
     }
+
+    /* MODAL háttér (elsötétített rész) */
+    .modal-bg {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(2px);
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+    }
+
+    /* MODAL ablak */
+    .modal-window {
+        background: #fff;
+        width: 95%;
+        max-width: 700px;
+        height: 80%;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* felső sáv X gombbal */
+    .modal-header {
+        padding: 10px 14px;
+        background: #f4f4f4;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+    }
+
+    .modal-close {
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    /* a tartalom (Google Sheets iframe) */
+    .modal-content {
+        flex: 1;
+        border: none;
+        width: 100%;
+    }
 </style>
 
 <script>
 function soonAlert(label) {
     alert(label + " – funkció hamarosan elérhető.");
+}
+
+function openModal() {
+    var bg = document.getElementById("modalBg");
+    bg.style.display = "flex";
+}
+
+function closeModal() {
+    var bg = document.getElementById("modalBg");
+    bg.style.display = "none";
 }
 </script>
 
@@ -99,11 +161,11 @@ function soonAlert(label) {
     <div class="subtitle">Állomás – belső segédalkalmazás</div>
 
     <div class="grid">
-        <!-- Beosztás -->
-        <a class="tile" href="https://docs.google.com/spreadsheets/d/1nj7Zyt_qgBCqjYpO3hdsQZaCY2TyQHfg4kgoBIuWsEs/edit?usp=sharing" target="_blank">
+        <!-- Beosztás – MODAL NYITÁS -->
+        <div class="tile" onclick="openModal()">
             <div class="tile-icon">📅</div>
             <div class="tile-label">Beosztás</div>
-        </a>
+        </div>
 
         <!-- Beosztás kérés -->
         <div class="tile" onclick="soonAlert('Beosztás kérés')">
@@ -150,6 +212,24 @@ function soonAlert(label) {
 
     <div class="footer">
         Belső használatra • Ha gond van az oldallal, jelezd az állomásvezetőnek.
+    </div>
+</div>
+
+<!-- BEOSZTÁS MODAL -->
+<div id="modalBg" class="modal-bg">
+    <div class="modal-window">
+        <div class="modal-header">
+            https://docs.google.com/spreadsheets/d/1nj7Zyt_qgBCqjYpO3hdsQZaCY2TyQHfg4kgoBIuWsEs/edit?usp=sharing
+            <div class="modal-close" onclick="closeModal()">×</div>
+        </div>
+
+        <!-- IDE ILLASZD BE A GOOGLE SHEETS LINKET -->
+        <iframe 
+            id="sheetFrame"
+            class="modal-content"
+            src="IDE_ILLASZD_BE_A_SHEETS_LINKET"
+            allowfullscreen>
+        </iframe>
     </div>
 </div>
 
