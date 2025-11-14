@@ -1,7 +1,7 @@
 {
   "name": "Budaörs OMSZ app",
   "short_name": "OMSZ Budaörs",
-  "start_url": "/korhaz-panel/",
+  "start_url": "/budaors/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
