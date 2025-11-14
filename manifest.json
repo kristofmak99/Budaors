@@ -1,7 +1,7 @@
 {
   "name": "Budaörs OMSZ app",
   "short_name": "OMSZ Budaörs",
-  "start_url": "/budaors/",
+  "start_url": "/Budaors/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
