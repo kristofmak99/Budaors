@@ -10,29 +10,82 @@
 <meta name="theme-color" content="#000000">
 
 <style>
+    :root {
+        --bg-light: #f2f2f2;
+        --bg-dark: #121212;
+        --card-light: #ffffff;
+        --card-dark: #1f1f1f;
+        --text-light: #000000;
+        --text-dark: #eeeeee;
+        --header-light: #f4f4f4;
+        --header-dark: #2a2a2a;
+    }
+
     body {
         font-family: Arial, sans-serif;
-        background: #f2f2f2;
+        background: var(--bg-light);
+        color: var(--text-light);
         margin: 0;
         padding: 20px;
         box-sizing: border-box;
     }
 
+    body.dark {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+    }
+
     .app-container {
         max-width: 600px;
         margin: 0 auto;
-        text-align: center;
+    }
+
+    .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     h1 {
         font-size: 26px;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
     }
 
     .subtitle {
         font-size: 14px;
         color: #555;
-        margin-bottom: 18px;
+        margin-bottom: 6px;
+    }
+
+    body.dark .subtitle {
+        color: #aaa;
+    }
+
+    .daily-info {
+        font-size: 13px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        background: #e3f2ff;
+        color: #003366;
+        margin-bottom: 16px;
+    }
+
+    body.dark .daily-info {
+        background: #1f2b38;
+        color: #d0e6ff;
+    }
+
+    .theme-toggle {
+        cursor: pointer;
+        font-size: 22px;
+        user-select: none;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(0,0,0,0.05);
+    }
+
+    body.dark .theme-toggle {
+        background: rgba(255,255,255,0.06);
     }
 
     .grid {
@@ -42,7 +95,7 @@
     }
 
     .tile {
-        background: #ffffff;
+        background: var(--card-light);
         border-radius: 16px;
         padding: 18px 12px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.08);
@@ -53,13 +106,17 @@
         cursor: pointer;
         transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
         text-decoration: none;
-        color: #000;
+        color: inherit;
+    }
+
+    body.dark .tile {
+        background: var(--card-dark);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
     .tile:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-        background: #f8f8f8;
     }
 
     .tile-icon {
@@ -70,12 +127,18 @@
     .tile-label {
         font-size: 15px;
         font-weight: 600;
+        text-align: center;
     }
 
     .footer {
         margin-top: 22px;
         font-size: 11px;
         color: #777;
+        text-align: center;
+    }
+
+    body.dark .footer {
+        color: #999;
     }
 
     /* MODAL háttér */
@@ -95,7 +158,7 @@
 
     /* MODAL ablak */
     .modal-window {
-        background: #fff;
+        background: var(--card-light);
         width: 95%;
         max-width: 700px;
         height: 90%;
@@ -106,15 +169,23 @@
         flex-direction: column;
     }
 
+    body.dark .modal-window {
+        background: var(--card-dark);
+    }
+
     /* MODAL fejléc */
     .modal-header {
         padding: 10px 14px;
-        background: #f4f4f4;
+        background: var(--header-light);
         font-weight: 600;
         display: flex;
         justify-content: space-between;
         align-items: center;
         font-size: 15px;
+    }
+
+    body.dark .modal-header {
+        background: var(--header-dark);
     }
 
     .modal-close {
@@ -127,14 +198,16 @@
         flex: 1;
         border: none;
         width: 100%;
+        background: transparent;
     }
 
-    /* AL menük (Checklist, Kocsik) */
+    /* AL menük (Checklist, Kocsik, Segédletek) */
     .modal-menu {
         padding: 16px;
         display: flex;
         flex-direction: column;
         gap: 10px;
+        overflow-y: auto;
     }
 
     .menu-btn {
@@ -149,9 +222,18 @@
         transition: 0.2s;
     }
 
+    body.dark .menu-btn {
+        background: #2b2b2b;
+        border-color: #444;
+    }
+
     .menu-btn:hover {
         background: #eee;
         transform: translateY(-1px);
+    }
+
+    body.dark .menu-btn:hover {
+        background: #3a3a3a;
     }
 
     /* Telefonszám modal */
@@ -170,6 +252,10 @@
         text-align: center;
     }
 
+    body.dark .phone-item {
+        background: #2a2a2a;
+    }
+
     .phone-name {
         font-weight: 700;
         font-size: 16px;
@@ -182,6 +268,10 @@
         margin-bottom: 6px;
     }
 
+    body.dark .phone-role {
+        color: #aaa;
+    }
+
     .phone-number a {
         color: #0059c9;
         text-decoration: none;
@@ -189,8 +279,100 @@
         font-weight: bold;
     }
 
+    body.dark .phone-number a {
+        color: #82b7ff;
+    }
+
     .phone-number a:hover {
         text-decoration: underline;
+    }
+
+    .phone-icon {
+        margin-right: 6px;
+    }
+
+    /* PIN overlay */
+    .pin-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+    }
+
+    .pin-box {
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 22px 18px;
+        width: 90%;
+        max-width: 320px;
+        text-align: center;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    }
+
+    body.dark .pin-box {
+        background: #1f1f1f;
+        color: #f0f0f0;
+    }
+
+    .pin-title {
+        font-size: 18px;
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
+
+    .pin-sub {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 14px;
+    }
+
+    body.dark .pin-sub {
+        color: #aaa;
+    }
+
+    .pin-input {
+        padding: 10px 12px;
+        font-size: 18px;
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+        letter-spacing: 4px;
+        margin-bottom: 10px;
+    }
+
+    .pin-btn {
+        margin-top: 6px;
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        background: #0059c9;
+        color: white;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .pin-btn:hover {
+        background: #004099;
+    }
+
+    .pin-error {
+        font-size: 12px;
+        color: #cc0000;
+        min-height: 16px;
+        margin-top: 4px;
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 22px;
+        }
     }
 </style>
 
@@ -268,17 +450,171 @@ function openHospitalModal() {
 function closeHospitalModal() {
     document.getElementById("hospitalModalBg").style.display = "none";
 }
+
+/* Segédletek */
+function openHelpModal() {
+    document.getElementById("helpModalBg").style.display = "flex";
+    document.getElementById("helpMenu").style.display = "flex";
+    document.getElementById("helpFrame").style.display = "none";
+    document.getElementById("helpFrame").src = "";
+}
+function closeHelpModal() {
+    document.getElementById("helpModalBg").style.display = "none";
+}
+function openHelpItem(type) {
+    let url = "";
+    // IDE KÉSŐBB PDF / LINK URL-EKET ÍRHATSZ
+    if (type === "ISBAR") url = "ISBAR_LINK_IDE";
+    if (type === "METHAN") url = "METHAN_LINK_IDE";
+    if (type === "NORADRENALIN") url = "NORADRENALIN_LINK_IDE";
+    if (type === "DOBUTAMIN") url = "DOBUTAMIN_LINK_IDE";
+    if (type === "RSI") url = "RSI_GYOGYSZEREK_LINK_IDE";
+    if (type === "RACE") url = "RACE_SCORE_LINK_IDE";
+    if (type === "WELLS") url = "WELLS_SCORE_LINK_IDE";
+    if (type === "PERC") url = "PERC_SCORE_LINK_IDE";
+
+    if (!url || url.endsWith("_IDE")) {
+        alert("Ehhez a segédlethez még nincs beállítva link. Cseréld ki a kódban a megfelelő URL-re.");
+        return;
+    }
+
+    document.getElementById("helpMenu").style.display = "none";
+    document.getElementById("helpFrame").style.display = "block";
+    document.getElementById("helpFrame").src = url;
+}
+
+/* Aktuális */
+function openNewsModal() {
+    document.getElementById("newsModalBg").style.display = "flex";
+}
+function closeNewsModal() {
+    document.getElementById("newsModalBg").style.display = "none";
+}
+
+/* Dark mode */
+function toggleTheme() {
+    const body = document.body;
+    const isDark = body.classList.toggle("dark");
+    localStorage.setItem("omsz_theme", isDark ? "dark" : "light");
+    const icon = document.getElementById("themeToggleIcon");
+    if (icon) icon.textContent = isDark ? "☀️" : "🌙";
+}
+
+/* PIN kód */
+function checkPin() {
+    const input = document.getElementById("pinInput");
+    const error = document.getElementById("pinError");
+    if (!input || !error) return;
+
+    if (input.value === "0278") {
+        localStorage.setItem("omsz_pin_ok", "1");
+        document.getElementById("pinOverlay").style.display = "none";
+        input.value = "";
+        error.textContent = "";
+    } else {
+        error.textContent = "Hibás PIN-kód.";
+        input.value = "";
+    }
+}
+
+/* Mai nap infó */
+function updateDailyInfo() {
+    const info = document.getElementById("dailyInfo");
+    if (!info) return;
+
+    const now = new Date();
+    const day = now.getDay();    // 0=vasárnap, 1=hétfő...
+    const date = now.getDate();  // 1-31
+
+    let lines = [];
+
+    // 1–10.: beosztás kérelem emlékeztető
+    if (date >= 1 && date <= 10) {
+        lines.push("📅 1–10. nap között: ne felejtsd el elküldeni a beosztás kérést!");
+    }
+
+    // Heti takarítás / feladat
+    if (day === 4) { // csütörtök
+        lines.push("🧹 Csütörtök: BLS II takarítás.");
+    } else if (day === 5) { // péntek
+        lines.push("🧹 Péntek: BLS I takarítás.");
+    } else if (day === 6) { // szombat
+        lines.push("🧹 Szombat: ALS takarítás.");
+    } else if (day === 0) { // vasárnap
+        lines.push("🚮 Vasárnap: garázs takarítás és szemét kivitel.");
+    }
+
+    if (lines.length === 0) {
+        lines.push("ℹ Ma nincs külön kiemelt feladat.");
+    }
+
+    info.innerHTML = lines.join("<br>");
+}
+
+/* INIT */
+document.addEventListener("DOMContentLoaded", function() {
+    // PIN ellenőrzés
+    const pinOk = localStorage.getItem("omsz_pin_ok");
+    const pinOverlay = document.getElementById("pinOverlay");
+    if (pinOk === "1") {
+        if (pinOverlay) pinOverlay.style.display = "none";
+    } else {
+        if (pinOverlay) pinOverlay.style.display = "flex";
+    }
+
+    // PIN enter gomb
+    const pinInput = document.getElementById("pinInput");
+    if (pinInput) {
+        pinInput.addEventListener("keyup", function(e) {
+            if (e.key === "Enter") {
+                checkPin();
+            }
+        });
+    }
+
+    // Theme betöltés
+    const savedTheme = localStorage.getItem("omsz_theme");
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        const icon = document.getElementById("themeToggleIcon");
+        if (icon) icon.textContent = "☀️";
+    }
+
+    // Mai nap infó
+    updateDailyInfo();
+});
 </script>
 
 </head>
 <body>
 
+<!-- PIN KÓD OVERLAY -->
+<div id="pinOverlay" class="pin-overlay">
+    <div class="pin-box">
+        <div class="pin-title">OMSZ Budaörs – Belépés</div>
+        <div class="pin-sub">Add meg az állomás PIN-kódját a belépéshez.</div>
+        <input id="pinInput" class="pin-input" type="password" maxlength="4" inputmode="numeric" autocomplete="off" />
+        <button class="pin-btn" onclick="checkPin()">Belépés</button>
+        <div id="pinError" class="pin-error"></div>
+    </div>
+</div>
+
 <div class="app-container">
-    <h1>OMSZ Budaörs</h1>
-    <div class="subtitle">Állomás – belső segédalkalmazás</div>
+    <div class="top-row">
+        <div>
+            <h1>OMSZ Budaörs</h1>
+            <div class="subtitle">Állomás – belső segédalkalmazás</div>
+        </div>
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <span id="themeToggleIcon">🌙</span>
+        </div>
+    </div>
+
+    <div id="dailyInfo" class="daily-info">
+        <!-- JS tölti ki -->
+    </div>
 
     <div class="grid">
-
         <div class="tile" onclick="openModal()">
             <div class="tile-icon">📅</div>
             <div class="tile-label">Beosztás</div>
@@ -307,6 +643,16 @@ function closeHospitalModal() {
         <div class="tile" onclick="openPhoneModal()">
             <div class="tile-icon">📞</div>
             <div class="tile-label">Telefonszámok</div>
+        </div>
+
+        <div class="tile" onclick="openHelpModal()">
+            <div class="tile-icon">📚</div>
+            <div class="tile-label">Segédletek</div>
+        </div>
+
+        <div class="tile" onclick="openNewsModal()">
+            <div class="tile-icon">📰</div>
+            <div class="tile-label">Aktuális</div>
         </div>
 
         <div class="tile" onclick="alert('Hibajegy kérdőív hamarosan…')">
@@ -397,32 +743,44 @@ function closeHospitalModal() {
             <div class="phone-item">
                 <div class="phone-name">Mák Kristóf</div>
                 <div class="phone-role">Állomásvezető</div>
-                <div class="phone-number"><a href="tel:+36308293788">+36 30 829 3788</a></div>
+                <div class="phone-number">
+                    <span class="phone-icon">📞</span>
+                    <a href="tel:+36308293788">+36 30 829 3788</a>
+                </div>
             </div>
 
             <div class="phone-item">
                 <div class="phone-name">Koós László</div>
                 <div class="phone-role">Garázsmester</div>
-                <div class="phone-number"><a href="tel:+36702501505">+36 70 250 1505</a></div>
+                <div class="phone-number">
+                    <span class="phone-icon">📞</span>
+                    <a href="tel:+36702501505">+36 70 250 1505</a>
+                </div>
             </div>
 
             <div class="phone-item">
                 <div class="phone-name">KÁNY</div>
                 <div class="phone-role">KÁNY</div>
-                <div class="phone-number"><a href="tel:+363080210022">+36 80 210 022</a></div>
+                <div class="phone-number">
+                    <span class="phone-icon">📞</span>
+                    <a href="tel:+363080210022">+36 80 210 022</a>
+                </div>
             </div>
 
             <div class="phone-item">
                 <div class="phone-name">RSI konzulens</div>
                 <div class="phone-role">RSI konzultáns</div>
-                <div class="phone-number"><a href="tel:+3680205025">+36 80 205 025</a></div>
+                <div class="phone-number">
+                    <span class="phone-icon">📞</span>
+                    <a href="tel:+3680205025">+36 80 205 025</a>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
 
-<!-- KÓRHÁZAK oldala IFRAME-BEN -->
+<!-- KÓRHÁZAK -->
 <div id="hospitalModalBg" class="modal-bg">
     <div class="modal-window">
         <div class="modal-header">
@@ -430,6 +788,44 @@ function closeHospitalModal() {
             <div class="modal-close" onclick="closeHospitalModal()">×</div>
         </div>
         <iframe class="modal-content" src="korhazak.html"></iframe>
+    </div>
+</div>
+
+<!-- SEGÉDLETEK -->
+<div id="helpModalBg" class="modal-bg">
+    <div class="modal-window">
+        <div class="modal-header">
+            Segédletek
+            <div class="modal-close" onclick="closeHelpModal()">×</div>
+        </div>
+
+        <div id="helpMenu" class="modal-menu">
+            <div class="menu-btn" onclick="openHelpItem('ISBAR')">ISBAR</div>
+            <div class="menu-btn" onclick="openHelpItem('METHAN')">METHAN</div>
+            <div class="menu-btn" onclick="openHelpItem('NORADRENALIN')">Noradrenalin</div>
+            <div class="menu-btn" onclick="openHelpItem('DOBUTAMIN')">Dobutamin</div>
+            <div class="menu-btn" onclick="openHelpItem('RSI')">RSI gyógyszerek</div>
+            <div class="menu-btn" onclick="openHelpItem('RACE')">RACE score</div>
+            <div class="menu-btn" onclick="openHelpItem('WELLS')">Wells score</div>
+            <div class="menu-btn" onclick="openHelpItem('PERC')">PERC score</div>
+        </div>
+
+        <iframe id="helpFrame" class="modal-content" style="display:none;"></iframe>
+    </div>
+</div>
+
+<!-- AKTUÁLIS -->
+<div id="newsModalBg" class="modal-bg">
+    <div class="modal-window">
+        <div class="modal-header">
+            Aktuális hírek
+            <div class="modal-close" onclick="closeNewsModal()">×</div>
+        </div>
+
+        <!-- Itt egyelőre csak egy infó van, később beállíthatod a PDF linket az iframe src-jébe -->
+        <iframe id="newsFrame" class="modal-content" src="" title="Aktuális hírek PDF">
+            <!-- Ha szeretnéd, cseréld ki az src="" részben a linket egy Google Drive PDF URL-re -->
+        </iframe>
     </div>
 </div>
 
