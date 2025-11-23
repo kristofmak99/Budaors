@@ -2,7 +2,7 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<title>Dobutamin kalkulátor</title>
+<title>Noradrenalin kalkulátor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     body {
@@ -58,51 +58,52 @@
 
 <body>
 <div class="box">
-    <h2>Dobutamin kalkulátor</h2>
+    <h2>Noradrenalin kalkulátor</h2>
 
     <label>Testtömeg (kg)</label>
-    <input id="dWeight" type="number" value="80" min="1" step="1">
+    <input id="nWeight" type="number" value="80" min="1" step="1">
 
     <label>Dózis (µg/kg/min)</label>
-    <input id="dDose" type="number" step="0.1" value="5" min="0">
+    <input id="nDose" type="number" step="0.01" value="0.1" min="0">
 
     <label>Hígítás</label>
-    <select id="dConc">
-        <option value="250">250 mg / 50 ml</option>
-        <option value="500">500 mg / 50 ml</option>
+    <select id="nConc">
+        <option value="1">1 mg / 50 ml</option>
+        <option value="3">3 mg / 50 ml</option>
+        <option value="5">5 mg / 50 ml</option>
     </select>
 
-    <div class="result" id="dOut">—</div>
+    <div class="result" id="nOut">—</div>
     <div class="hint">Eredmény: infúziós sebesség ml/óra értékben.</div>
 </div>
 
 <script>
-function calcDobu(){
-    const w = parseFloat(document.getElementById("dWeight").value);
-    const d = parseFloat(document.getElementById("dDose").value);
-    const c = parseFloat(document.getElementById("dConc").value); // mg
+function calcNor(){
+    const w = parseFloat(document.getElementById("nWeight").value);
+    const d = parseFloat(document.getElementById("nDose").value);
+    const c = parseFloat(document.getElementById("nConc").value);
 
     if (!w || !d || w <= 0 || d < 0) {
-        document.getElementById("dOut").textContent = "—";
+        document.getElementById("nOut").textContent = "—";
         return;
     }
 
     // mg → µg: 1 mg = 1000 µg
-    const totalUg = c * 1000;   // teljes hatóanyag µg-ban
-    const ml = 50;              // oldat térfogata
+    const totalUg = c * 1000;
+    const ml = 50;
     const ugPerMl = totalUg / ml;
 
     // ml/h = (d [µg/kg/min] * w[kg] * 60[min/h]) / (µg/ml)
     const mlh = (d * w * 60) / ugPerMl;
 
-    document.getElementById("dOut").textContent = mlh.toFixed(1) + " ml/h";
+    document.getElementById("nOut").textContent = mlh.toFixed(1) + " ml/h";
 }
 
-document.querySelectorAll("#dWeight, #dDose, #dConc").forEach(el => {
-    el.addEventListener("input", calcDobu);
+document.querySelectorAll("#nWeight, #nDose, #nConc").forEach(el => {
+    el.addEventListener("input", calcNor);
 });
 
-calcDobu();
+calcNor();
 </script>
 </body>
 </html>
