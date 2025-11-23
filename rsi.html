@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>RSI Gyógyszer kalkulátor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --bg-light: #f4f4f4;
+    --bg-dark: #121212;
+    --card-light: #ffffff;
+    --card-dark: #1f1f1f;
+    --text-light: #000000;
+    --text-dark: #eeeeee;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 14px;
+    background: var(--bg-light);
+    color: var(--text-light);
+    transition: 0.2s ease;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+.box {
+    background: var(--card-light);
+    padding: 16px;
+    border-radius: 12px;
+    max-width: 400px;
+    margin: 0 auto;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+body.dark .box {
+    background: var(--card-dark);
+}
+
+h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 14px;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    border: 1px solid #999;
+}
+
+.radio-row {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.result-block {
+    margin-top: 16px;
+    background: #0077cc;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    white-space: pre-line;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>RSI Gyógyszerkalkulátor</h2>
+
+    <label>Testtömeg</label>
+    <select id="weight"></select>
+
+    <label>Beteg állapota</label>
+    <div class="radio-row">
+        <label><input type="radio" name="status" value="stable" checked> Stabil</label>
+        <label><input type="radio" name="status" value="unstable"> Instabil</label>
+    </div>
+
+    <label>Indukciós szer</label>
+    <div class="radio-row">
+        <label><input type="radio" name="agent" value="ketamin" checked> Ketamin</label>
+        <label><input type="radio" name="agent" value="etomidat"> Etomidat</label>
+    </div>
+
+    <div class="result-block" id="inductionResult">—</div>
+    <div class="result-block" id="lysthenonResult">—</div>
+</div>
+
+<script>
+// ---- TÉMABEÁLLÍTÁS ÁTVÉTELE INDEXBŐL ----
+(function applyTheme() {
+    try {
+        if (window.parent && window.parent !== window) {
+            if (window.parent.document.body.classList.contains("dark")) {
+                document.body.classList.add("dark");
+                return;
+            }
+        }
+    } catch (e) {}
+
+    const saved = localStorage.getItem("omsz_theme");
+    if (saved === "dark") {
+        document.body.classList.add("dark");
+    }
+})();
+
+// ---- TESTTÖMEG OPCIÓK ----
+(function fillWeights() {
+    const sel = document.getElementById("weight");
+    for (let w = 5; w <= 200; w += 5) {
+        const opt = document.createElement("option");
+        opt.value = w;
+        opt.textContent = w + " kg";
+        sel.appendChild(opt);
+    }
+    sel.value = "80";
+})();
+
+function calcRSI() {
+    const weight = parseFloat(document.getElementById("weight").value);
+    const status = document.querySelector('input[name="status"]:checked').value;
+    const agent  = document.querySelector('input[name="agent"]:checked').value;
+
+    const inductionResult = document.getElementById("inductionResult");
+    const lysthenonResult = document.getElementById("lysthenonResult");
+
+    if (!weight || weight <= 0) {
+        inductionResult.textContent = "Érvénytelen testtömeg.";
+        lysthenonResult.textContent = "Érvénytelen testtömeg.";
+        return;
+    }
+
+    // === Indukciós szerek ===
+    let baseMgPerKg = 0;
+    let conc = 0;
+    let maxMg = 0;
+    let name = "";
+
+    if (agent === "ketamin") {
+        name = "Ketamin";
+        baseMgPerKg = 2.0;
+        conc = 10;     // mg/ml
+        maxMg = 200;   // max 200 mg
+    } else {
+        name = "Etomidat";
+        baseMgPerKg = 0.3;
+        conc = 2;      // mg/ml
+        maxMg = 20;    // max 20 mg
+    }
+
+    let doseMgPerKg = baseMgPerKg;
+    if (status === "unstable") doseMgPerKg /= 2;
+
+    let totalMg = doseMgPerKg * weight;
+    if (totalMg > maxMg) totalMg = maxMg;
+
+    const totalMl = totalMg / conc;
+
+    inductionResult.textContent =
+`${name}
+Dózis: ${doseMgPerKg.toFixed(2)} mg/ttkg
+Összesen: ${totalMg.toFixed(1)} mg
+Térfogat: ${totalMl.toFixed(1)} ml`;
+
+    // === Lysthenon ===
+    const lysMgPerKg = 2;
+    const lysConc = 20; // mg/ml
+    let lysMg = lysMgPerKg * weight;
+    if (lysMg > 200) lysMg = 200;
+
+    const lysMl = lysMg / lysConc;
+
+    lysthenonResult.textContent =
+`Lysthenon
+Dózis: 2 mg/ttkg
+Összesen: ${lysMg.toFixed(1)} mg
+Térfogat: ${lysMl.toFixed(1)} ml`;
+}
+
+document.querySelectorAll("select, input[type=radio]").forEach(el => {
+    el.addEventListener("input", calcRSI);
+});
+
+calcRSI();
+</script>
+
+</body>
+</html>
