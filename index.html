@@ -234,18 +234,19 @@
     }
 
     .modal-window {
-        background: var(--card-light);
-        width: 95%;
-        max-width: 700px;
-        height: 90%;
-        border-radius: 16px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        transform: scale(0.9);
-        opacity: 0;
-        animation: modalZoomIn 0.22s ease-out forwards;
+    background: var(--card-light);
+    width: 95%;
+    max-width: 700px;
+
+    height: 90vh;
+    max-height: 90vh;
+
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
     }
 
     @keyframes modalZoomIn {
