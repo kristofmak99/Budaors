@@ -109,17 +109,17 @@
     <!-- Stridor -->
     <div class="section-title">Stridor</div>
     <div class="item">
-         <label><input type="radio" name="cyan" value="0" checked>Nincs (0 pont)</label>
+        <label><input type="radio" name="stridor" value="0" checked>Nincs (0 pont)</label>
     </div>
     <div class="item">
-        <label><input type="radio" name="cyan" value="1">Belégzésben (1 pont)</label>
+        <label><input type="radio" name="stridor" value="1">Belégzésben (1 pont)</label>
     </div>
     <div class="item">
-        <label><input type="radio" name="cyan" value="2">Be és kilégézsben (2 pont)</label>
+        <label><input type="radio" name="stridor" value="2">Be- és kilégzésben (2 pont)</label>
     </div>
 
     <!-- Cyanosis -->
-    <div class="section-title">Cyanosis </div>
+    <div class="section-title">Cyanosis</div>
     <div class="item">
         <label><input type="radio" name="cyan" value="0" checked>Nincs (0 pont)</label>
     </div>
@@ -127,19 +127,19 @@
         <label><input type="radio" name="cyan" value="1">Körlevegőn (1 pont)</label>
     </div>
     <div class="item">
-        <label><input type="radio" name="cyan" value="2">Oxigén mellet is (2 pont)</label>
+        <label><input type="radio" name="cyan" value="2">Oxigén mellett is (2 pont)</label>
     </div>
 
     <!-- Belégzési hang -->
     <div class="section-title">Belégzési hang</div>
     <div class="item">
-        <label><input type="radio" name="stridor" value="0" checked>Normál (0 pont)</label>
+        <label><input type="radio" name="airentry" value="0" checked>Normál (0 pont)</label>
     </div>
     <div class="item">
-        <label><input type="radio" name="stridor" value="1">Érdes (1 pont)</label>
+        <label><input type="radio" name="airentry" value="1">Érdes (1 pont)</label>
     </div>
     <div class="item">
-        <label><input type="radio" name="stridor" value="2">Gyengült (2 pont)</label>
+        <label><input type="radio" name="airentry" value="2">Gyengült (2 pont)</label>
     </div>
 
     <!-- Segédizmok használata -->
@@ -151,26 +151,26 @@
         <label><input type="radio" name="retract" value="1">Jugularis (1 pont)</label>
     </div>
     <div class="item">
-        <label><input type="radio" name="retract" value="2">Jugularis, Sternalis, Intercostalis (2 pont)</label>
+        <label><input type="radio" name="retract" value="2">Jugularis, sternalis, intercostalis (2 pont)</label>
     </div>
 
     <!-- Köhögés -->
     <div class="section-title">Köhögés</div>
     <div class="item">
-        <label><input type="radio" name="air" value="0" checked>Normális (0 pont)</label>
+        <label><input type="radio" name="cough" value="0" checked>Normális (0 pont)</label>
     </div>
     <div class="item">
-        <label><input type="radio" name="air" value="1">Rekedtség (1 pont)</label>
+        <label><input type="radio" name="cough" value="1">Rekedtség (1 pont)</label>
     </div>
     <div class="item">
-        <label><input type="radio" name="air" value="2">Ugató (2 pont)</label>
+        <label><input type="radio" name="cough" value="2">Ugató köhögés (2 pont)</label>
     </div>
 
     <div class="result" id="totalScore">Összpontszám: 0</div>
-    <div class="risk-text" id="riskText">Súlyosság: enyhe</div>
+    <div class="risk-text" id="riskText">Súlyosság: enyhe krupp</div>
 
     <div class="hint">
-        0–2: enyhe, 3–5: középsúlyos, 6–10: súlyos (impending respirációs elégtelenség).
+        0–2: enyhe, 3–5: középsúlyos, 6–10: súlyos.
     </div>
 </div>
 
@@ -184,7 +184,7 @@
 })();
 
 function calcKrupp(){
-    const groups = ["cons", "cyan", "stridor", "retract", "air"];
+    const groups = ["stridor", "cyan", "airentry", "retract", "cough"];
     let total = 0;
 
     groups.forEach(name => {
@@ -205,10 +205,8 @@ function calcKrupp(){
         sev = "enyhe krupp";
     } else if (total >= 3 && total <= 5) {
         sev = "középsúlyos krupp";
-    } else if (total >= 6 && total <= 11) {
+    } else if (total >= 6 && total <= 10) {
         sev = "súlyos krupp";
-    } else {
-        sev = "életveszélyes állapot / impending respirációs elégtelenség";
     }
 
     riskEl.textContent = "Súlyosság: " + sev;
