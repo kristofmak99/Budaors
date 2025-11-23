@@ -1271,16 +1271,19 @@ function openHelpItem(key){
     let url = "";
 
     if (key === "ISBAR") {
-        url = "isbar.html";       // ISBAR segédlet (PDF)
+        url = "isbar.pdf";         // ISBAR segédlet
     }
     else if (key === "METHANE") {
-        url = "methan.html";     // METHANE segédlet (PDF)
+        url = "methane.pdf";       // METHANE segédlet
     }
     else if (key === "NORAD") {
-        url = "norad.html";      // Noradrenalin kalkulátor (külön HTML)
+        url = "norad.html";        // Noradrenalin kalkulátor (külön HTML)
     }
     else if (key === "DOBUT") {
-        url = "dobut.html";      // Dobutamin kalkulátor (külön HTML)
+        url = "dobut.html";        // Dobutamin kalkulátor (külön HTML)
+    }
+    else if (key === "WELLS") {
+        url = "wells.html";        // Wells–PE kalkulátor (külön HTML)
     }
     else {
         alert("Ehhez a segédlethez még nincs beállítva link.");
