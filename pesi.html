@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>PESI score – Tüdőembólia súlyosság</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    :root {
+        --bg-light: #f4f4f4;
+        --bg-dark: #121212;
+        --card-light: #ffffff;
+        --card-dark: #1f1f1f;
+        --text-light: #000000;
+        --text-dark: #eeeeee;
+        --accent: #0077cc;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 14px;
+        background: var(--bg-light);
+        color: var(--text-light);
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    body.dark {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+    }
+
+    .box {
+        background: var(--card-light);
+        padding: 16px;
+        border-radius: 12px;
+        max-width: 500px;
+        margin: 0 auto;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    body.dark .box {
+        background: var(--card-dark);
+    }
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .section-title {
+        margin-top: 12px;
+        margin-bottom: 4px;
+        font-weight: bold;
+        font-size: 14px;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        padding-bottom: 2px;
+    }
+    body.dark .section-title {
+        border-bottom-color: rgba(255,255,255,0.1);
+    }
+
+    .item {
+        margin-top: 6px;
+        font-size: 14px;
+    }
+
+    label {
+        cursor: pointer;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+        margin-right: 6px;
+    }
+
+    .result {
+        margin-top: 18px;
+        padding: 14px;
+        background: var(--accent);
+        color: white;
+        text-align: center;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .risk-text {
+        margin-top: 8px;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .hint {
+        margin-top: 10px;
+        font-size: 11px;
+        color: #999;
+        text-align: center;
+    }
+    body.dark .hint {
+        color: #ccc;
+    }
+</style>
+</head>
+<body>
+<div class="box">
+    <h2>PESI score<br><small>(Pulmonary Embolism Severity Index)</small></h2>
+
+    <div class="section-title">Alap pontszám</div>
+    <div class="item">
+        <label>Életkor (év) = pontszám</label><br>
+        <input id="age" type="number" min="0" max="120" value="60" style="margin-top:4px; width:80px; padding:4px; border-radius:6px; border:1px solid #888;">
+    </div>
+    <div class="item">
+        <label><input type="radio" name="sex" value="0" checked>Férfi: +0 pont</label><br>
+        <label><input type="radio" name="sex" value="10">Nő: +10 pont</label>
+    </div>
+
+    <div class="section-title">Kórelőzmény</div>
+    <div class="item">
+        <label><input type="checkbox" data-score="30">Malignus betegség (aktív daganat) (+30)</label>
+    </div>
+    <div class="item">
+        <label><input type="checkbox" data-score="10">Szívelégtelenség (+10)</label>
+    </div>
+    <div class="item">
+        <label><input type="checkbox" data-score="10">Krónikus tüdőbetegség (+10)</label>
+    </div>
+
+    <div class="section-title">Klinikai állapot</div>
+    <div class="item">
+        <label><input type="checkbox" data-score="20">Pulzus ≥ 110/perc (+20)</label>
+    </div>
+    <div class="item">
+        <label><input type="checkbox" data-score="30">Szisztolés vérnyomás &lt; 100 Hgmm (+30)</label>
+    </div>
+    <div class="item">
+        <label><input type="checkbox" data-score="20">Légzésszám &gt; 30/min (+20)</label>
+    </div>
+    <div class="item">
+        <label><input type="checkbox" data-score="20">Hőmérséklet &lt; 36 °C (+20)</label>
+    </div>
+    <div class="item">
+        <label><input type="checkbox" data-score="60">Eszméletzavar, zavartság (+60)</label>
+    </div>
+    <div class="item">
+        <label><input type="checkbox" data-score="20">Artériás O₂ szaturáció &lt; 90% (+20)</label>
+    </div>
+
+    <div class="result" id="totalScore">Összpontszám: 0</div>
+    <div class="risk-text" id="riskText">Kockázati kategória: –</div>
+
+    <div class="hint">
+        PESI kockázati osztályok: I (&le;65), II (66–85), III (86–105), IV (106–125), V (&ge;126).
+    </div>
+</div>
+
+<script>
+// Téma átvétele az indexből
+(function applyTheme() {
+    const saved = localStorage.getItem("omsz_theme");
+    if (saved === "dark") {
+        document.body.classList.add("dark");
+    }
+})();
+
+function calcPESI(){
+    const ageInput = document.getElementById("age");
+    let age = parseInt(ageInput.value, 10);
+    if (isNaN(age) || age < 0) age = 0;
+
+    // Nemi pontszám
+    const sexRadios = document.querySelectorAll("input[name='sex']");
+    let sexScore = 0;
+    sexRadios.forEach(r => {
+        if (r.checked) sexScore = parseInt(r.value, 10);
+    });
+
+    let total = age + sexScore;
+
+    // Checkboxok
+    const checks = document.querySelectorAll("input[type='checkbox'][data-score]");
+    checks.forEach(ch => {
+        if (ch.checked) {
+            total += parseInt(ch.getAttribute("data-score"), 10);
+        }
+    });
+
+    const totalEl = document.getElementById("totalScore");
+    const riskEl  = document.getElementById("riskText");
+    totalEl.textContent = "Összpontszám: " + total;
+
+    let risk = "";
+    if (total <= 65) {
+        risk = "I. osztály – nagyon alacsony kockázat";
+    } else if (total >= 66 && total <= 85) {
+        risk = "II. osztály – alacsony kockázat";
+    } else if (total >= 86 && total <= 105) {
+        risk = "III. osztály – közepes kockázat";
+    } else if (total >= 106 && total <= 125) {
+        risk = "IV. osztály – magas kockázat";
+    } else {
+        risk = "V. osztály – nagyon magas kockázat";
+    }
+
+    riskEl.textContent = "Kockázati kategória: " + risk;
+}
+
+// Eventek
+document.getElementById("age").addEventListener("input", calcPESI);
+document.querySelectorAll("input[name='sex']").forEach(r => {
+    r.addEventListener("change", calcPESI);
+});
+document.querySelectorAll("input[type='checkbox'][data-score]").forEach(ch => {
+    ch.addEventListener("change", calcPESI);
+});
+
+// induló számítás
+calcPESI();
+</script>
+</body>
+</html>
