@@ -1271,24 +1271,32 @@ function openHelpItem(key){
     let url = "";
 
     if (key === "ISBAR") {
-        url = "isbar.pdf";   // <-- ide jön az ISBAR PDF
+        url = "isbar.pdf";       // ISBAR segédlet (PDF)
     }
     else if (key === "METHANE") {
-        url = "methane.pdf"; // <-- ide jön a METHANE PDF
+        url = "methane.pdf";     // METHANE segédlet (PDF)
+    }
+    else if (key === "NORAD") {
+        url = "norad.html";      // Noradrenalin kalkulátor (külön HTML)
+    }
+    else if (key === "DOBUT") {
+        url = "dobut.html";      // Dobutamin kalkulátor (külön HTML)
     }
     else {
         alert("Ehhez a segédlethez még nincs beállítva link.");
         return;
     }
 
-    const menu = document.getElementById("helpMenu");
+    const menu  = document.getElementById("helpMenu");
     const frame = document.getElementById("helpFrame");
 
-    menu.style.display = "none";
-    frame.style.display = "block";
-    frame.src = url;
+    if (menu && frame) {
+        menu.style.display  = "none";
+        frame.style.display = "block";
+        frame.src           = url;
+    }
 }
-
+    
 // AKTUÁLIS
 function openAktualis(){
     showModal("aktualisModal");
