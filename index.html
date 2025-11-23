@@ -136,6 +136,7 @@
     .tile:nth-child(7) { animation-delay: 0.35s; }
     .tile:nth-child(8) { animation-delay: 0.40s; }
     .tile:nth-child(9) { animation-delay: 0.45s; }
+    .tile:nth-child(10){ animation-delay: 0.50s; }
 
     @keyframes tileFadeIn {
         0% { opacity: 0; transform: translateY(12px); }
@@ -545,10 +546,15 @@
             <div class="tile-label">Aktuális</div>
         </div>
 
-        <!-- ÚJ: SZERVIZ TILE -->
         <div class="tile" onclick="openService()">
             <div class="tile-icon">🛠️</div>
             <div class="tile-label">Szerviz</div>
+        </div>
+
+        <!-- ÚJ: SZTM TILE -->
+        <div class="tile" onclick="openSZTM()">
+            <div class="tile-icon">⏱️</div>
+            <div class="tile-label">SZTM</div>
         </div>
     </div>
 
@@ -888,6 +894,20 @@
     </div>
 </div>
 
+<!-- SZTM MODAL -->
+<div id="sztmModal" class="modal-bg">
+    <div class="modal-window">
+        <div class="modal-header">
+            SZTM – munkaidő jelentés
+            <div class="modal-close" onclick="closeSZTM()">×</div>
+        </div>
+        <iframe class="modal-content"
+            src="https://sztm.mentok.hu"
+            allowfullscreen>
+        </iframe>
+    </div>
+</div>
+
 <script>
 // PIN – 0278, 1 hétig megjegyezve
 function checkPIN(){
@@ -1082,7 +1102,7 @@ function filterHospitals() {
     });
 }
 
-// SZERVIZ MODAL
+// SZERVIZ
 function openService(){
     const menu = document.getElementById("serviceMenu");
     const fr   = document.getElementById("serviceFrame");
@@ -1102,16 +1122,12 @@ function openServiceItem(type){
     let url = "";
 
     if (type === "PROFILE") {
-        // Profil hibajegy linkje:
         // url = "https://forms.gle/.....";
     } else if (type === "ACCIDENT") {
-        // Baleseti bejelentő linkje:
         // url = "https://forms.gle/.....";
     } else if (type === "GLASS") {
-        // Üvegkár linkje:
         // url = "https://forms.gle/.....";
     } else if (type === "SERVICE") {
-        // Szerviz / karbantartás kérdőív linkje:
         // url = "https://forms.gle/.....";
     }
 
@@ -1127,6 +1143,14 @@ function openServiceItem(type){
         fr.style.display   = "block";
         fr.src = url;
     }
+}
+
+// SZTM
+function openSZTM(){
+    showModal("sztmModal");
+}
+function closeSZTM(){
+    hideModal("sztmModal");
 }
 
 /* BADGE – BEOSZTÁS KÉRÉS */
