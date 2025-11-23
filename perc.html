@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>PERC score – Tüdőembólia kizárása</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    :root {
+        --bg-light: #f4f4f4;
+        --bg-dark: #121212;
+        --card-light: #ffffff;
+        --card-dark: #1f1f1f;
+        --text-light: #000000;
+        --text-dark: #eeeeee;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 14px;
+        background: var(--bg-light);
+        color: var(--text-light);
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    body.dark {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+    }
+
+    .wrapper {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .box {
+        background: var(--card-light);
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    body.dark .box {
+        background: var(--card-dark);
+    }
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 4px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .subtitle {
+        font-size: 13px;
+        text-align: center;
+        margin-bottom: 12px;
+        color: #666;
+    }
+
+    body.dark .subtitle {
+        color: #ccc;
+    }
+
+    .item {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(150,150,150,0.25);
+    }
+
+    .item:last-child {
+        border-bottom: none;
+    }
+
+    .item input {
+        margin-top: 3px;
+        transform: scale(1.1);
+    }
+
+    .item label {
+        flex: 1;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .note {
+        font-size: 11px;
+        margin-top: 6px;
+        color: #888;
+    }
+
+    body.dark .note {
+        color: #aaa;
+    }
+
+    .result-box {
+        margin-top: 14px;
+        padding: 12px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .result-neutral {
+        background: #607d8b;
+    }
+
+    .result-negative {
+        background: #2e7d32; /* zöld – PERC negatív */
+    }
+
+    .result-positive {
+        background: #c62828; /* piros – PERC pozitív */
+    }
+
+    .score-line {
+        font-size: 16px;
+        margin-bottom: 4px;
+    }
+
+    .explanation {
+        font-size: 12px;
+        font-weight: normal;
+        opacity: 0.9;
+    }
+
+    .disclaimer {
+        margin-top: 8px;
+        font-size: 11px;
+        color: #999;
+        text-align: center;
+    }
+
+    body.dark .disclaimer {
+        color: #bbb;
+    }
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="box">
+        <h2>PERC score</h2>
+        <div class="subtitle">Tüdőembólia kizárása alacsony klinikai valószínűség esetén</div>
+
+        <div class="item">
+            <input type="checkbox" id="age" class="perc-item" value="1">
+            <label for="age">Életkor ≥ 50 év</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="hr" class="perc-item" value="1">
+            <label for="hr">Pulzusszám ≥ 100/perc</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="spo2" class="perc-item" value="1">
+            <label for="spo2">SpO₂ &lt; 95% szobalevegőn</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="hemoptysis" class="perc-item" value="1">
+            <label for="hemoptysis">Hemoptoe</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="estrogen" class="perc-item" value="1">
+            <label for="estrogen">Ösztrogén tartalmú hormonkezelés (pl. fogamzásgátló)</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="history-vte" class="perc-item" value="1">
+            <label for="history-vte">Korábbi vénás thromboembolia (MVT vagy PE) anamnézis</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="unilateral-leg" class="perc-item" value="1">
+            <label for="unilateral-leg">Unilaterális alsó végtagi duzzanat</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="recent-surgery" class="perc-item" value="1">
+            <label for="recent-surgery">Friss (&le; 4 hét) műtét vagy jelentős trauma, kórházi fekvés</label>
+        </div>
+
+        <div class="note">
+            Pipáld ki azokat, amelyek <strong>fennállnak</strong> a betegnél.  
+            Minden fennálló tétel 1 pontot ér.
+        </div>
+
+        <div id="resultBox" class="result-box result-neutral">
+            <div class="score-line" id="scoreLine">Összpontszám: 0 / 8</div>
+            <div class="explanation" id="explanationText">
+                Még nem állapítható meg a PERC eredmény – jelöld a kockázati tényezőket.
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            Az eszköz tájékoztató jellegű, a klinikai döntést nem helyettesíti.  
+            PERC csak <strong>alacsony előzetes PE valószínűség</strong> esetén használható.
+        </div>
+    </div>
+</div>
+
+<script>
+// ---- TÉMABEÁLLÍTÁS ÁTVÉTELE INDEXBŐL ----
+(function applyTheme() {
+    try {
+        // Ha iframe-ben futunk, nézzük a szülő body-ját
+        if (window.parent && window.parent !== window) {
+            if (window.parent.document.body.classList.contains("dark")) {
+                document.body.classList.add("dark");
+                return;
+            }
+        }
+    } catch (e) {
+        // más origin / hiba esetén hagyjuk
+    }
+
+    // Ha nem férünk hozzá a parenthez, használjuk a localStorage-t
+    const saved = localStorage.getItem("omsz_theme");
+    if (saved === "dark") {
+        document.body.classList.add("dark");
+    }
+})();
+
+// ---- PERC SZÁMÍTÁS ----
+function updatePercScore() {
+    const checkboxes = document.querySelectorAll(".perc-item");
+    let score = 0;
+
+    checkboxes.forEach(cb => {
+        if (cb.checked) {
+            score += Number(cb.value) || 0;
+        }
+    });
+
+    const resultBox = document.getElementById("resultBox");
+    const scoreLine = document.getElementById("scoreLine");
+    const explanationText = document.getElementById("explanationText");
+
+    scoreLine.textContent = "Összpontszám: " + score + " / 8";
+
+    // Alapeset: semmi bepipálva
+    resultBox.classList.remove("result-neutral", "result-negative", "result-positive");
+
+    if (score === 0) {
+        resultBox.classList.add("result-negative");
+        explanationText.innerHTML =
+            "<strong>PERC negatív (0 pont).</strong><br>" +
+            "Alacsony klinikai PE valószínűség esetén a tüdőembólia gyakorlatilag kizárható.";
+    } else {
+        resultBox.classList.add("result-positive");
+        explanationText.innerHTML =
+            "<strong>PERC pozitív (" + score + " pont).</strong><br>" +
+            "A tüdőembólia nem zárható ki PERC alapján – további diagnosztika mérlegelendő.";
+    }
+
+    // Ha semmit nem jelöltek (még nem nyúltak hozzá): vissza neutrál stílusra
+    const anyTouched = Array.from(checkboxes).some(cb => cb.checked);
+    if (!anyTouched) {
+        resultBox.classList.remove("result-negative", "result-positive");
+        resultBox.classList.add("result-neutral");
+        explanationText.textContent =
+            "Még nem állapítható meg a PERC eredmény – jelöld a kockázati tényezőket.";
+    }
+}
+
+document.querySelectorAll(".perc-item").forEach(cb => {
+    cb.addEventListener("change", updatePercScore);
+});
+
+// induló állapot
+updatePercScore();
+</script>
+</body>
+</html>
