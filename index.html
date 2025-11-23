@@ -234,19 +234,19 @@
     }
 
     .modal-window {
-    background: var(--card-light);
-    width: 95%;
-    max-width: 700px;
-
-    height: 90vh;
-    max-height: 90vh;
-
-    border-radius: 16px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
+        background: var(--card-light);
+        width: 95%;
+        max-width: 700px;
+    
+        height: 90vh;
+        max-height: 90vh;
+    
+        border-radius: 16px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+        display: flex;
+        flex-direction: column;
+    
+        overflow: hidden;
     }
 
     @keyframes modalZoomIn {
@@ -280,7 +280,12 @@
         flex: 1;
         border: none;
         width: 100%;
+    
+        height: 100%;
+        max-height: 100%;
+    
         background: transparent;
+        overflow: auto;
     }
 
     .modal-menu {
