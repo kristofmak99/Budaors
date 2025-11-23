@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>Krupp – Westley Croup Score</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    :root {
+        --bg-light: #f4f4f4;
+        --bg-dark: #121212;
+        --card-light: #ffffff;
+        --card-dark: #1f1f1f;
+        --text-light: #000000;
+        --text-dark: #eeeeee;
+        --accent: #0077cc;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 14px;
+        background: var(--bg-light);
+        color: var(--text-light);
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    body.dark {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+    }
+
+    .box {
+        background: var(--card-light);
+        padding: 16px;
+        border-radius: 12px;
+        max-width: 500px;
+        margin: 0 auto;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    body.dark .box {
+        background: var(--card-dark);
+    }
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .section-title {
+        margin-top: 12px;
+        margin-bottom: 4px;
+        font-weight: bold;
+        font-size: 14px;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        padding-bottom: 2px;
+    }
+    body.dark .section-title {
+        border-bottom-color: rgba(255,255,255,0.1);
+    }
+
+    .item {
+        margin-top: 4px;
+        font-size: 14px;
+    }
+
+    label {
+        cursor: pointer;
+    }
+
+    input[type="radio"] {
+        margin-right: 6px;
+    }
+
+    .result {
+        margin-top: 18px;
+        padding: 14px;
+        background: var(--accent);
+        color: white;
+        text-align: center;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .risk-text {
+        margin-top: 8px;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .hint {
+        margin-top: 10px;
+        font-size: 11px;
+        color: #999;
+        text-align: center;
+    }
+    body.dark .hint {
+        color: #ccc;
+    }
+</style>
+</head>
+<body>
+<div class="box">
+    <h2>Westley Croup Score<br><small>(Krupp súlyosság)</small></h2>
+
+    <!-- Stridor -->
+    <div class="section-title">Stridor</div>
+    <div class="item">
+         <label><input type="radio" name="cyan" value="0" checked>Nincs (0 pont)</label>
+    </div>
+    <div class="item">
+        <label><input type="radio" name="cyan" value="1">Belégzésben (1 pont)</label>
+    </div>
+    <div class="item">
+        <label><input type="radio" name="cyan" value="2">Be és kilégézsben (2 pont)</label>
+    </div>
+
+    <!-- Cyanosis -->
+    <div class="section-title">Cyanosis </div>
+    <div class="item">
+        <label><input type="radio" name="cyan" value="0" checked>Nincs (0 pont)</label>
+    </div>
+    <div class="item">
+        <label><input type="radio" name="cyan" value="1">Körlevegőn (1 pont)</label>
+    </div>
+    <div class="item">
+        <label><input type="radio" name="cyan" value="2">Oxigén mellet is (2 pont)</label>
+    </div>
+
+    <!-- Belégzési hang -->
+    <div class="section-title">Belégzési hang</div>
+    <div class="item">
+        <label><input type="radio" name="stridor" value="0" checked>Normál (0 pont)</label>
+    </div>
+    <div class="item">
+        <label><input type="radio" name="stridor" value="1">Érdes (1 pont)</label>
+    </div>
+    <div class="item">
+        <label><input type="radio" name="stridor" value="2">Gyengült (2 pont)</label>
+    </div>
+
+    <!-- Segédizmok használata -->
+    <div class="section-title">Segédizmok használata</div>
+    <div class="item">
+        <label><input type="radio" name="retract" value="0" checked>Nincs (0 pont)</label>
+    </div>
+    <div class="item">
+        <label><input type="radio" name="retract" value="1">Jugularis (1 pont)</label>
+    </div>
+    <div class="item">
+        <label><input type="radio" name="retract" value="2">Jugularis, Sternalis, Intercostalis (2 pont)</label>
+    </div>
+
+    <!-- Köhögés -->
+    <div class="section-title">Köhögés</div>
+    <div class="item">
+        <label><input type="radio" name="air" value="0" checked>Normális (0 pont)</label>
+    </div>
+    <div class="item">
+        <label><input type="radio" name="air" value="1">Rekedtség (1 pont)</label>
+    </div>
+    <div class="item">
+        <label><input type="radio" name="air" value="2">Ugató (2 pont)</label>
+    </div>
+
+    <div class="result" id="totalScore">Összpontszám: 0</div>
+    <div class="risk-text" id="riskText">Súlyosság: enyhe</div>
+
+    <div class="hint">
+        0–2: enyhe, 3–5: középsúlyos, 6–10: súlyos (impending respirációs elégtelenség).
+    </div>
+</div>
+
+<script>
+// Téma átvétele az indexből
+(function applyTheme() {
+    const saved = localStorage.getItem("omsz_theme");
+    if (saved === "dark") {
+        document.body.classList.add("dark");
+    }
+})();
+
+function calcKrupp(){
+    const groups = ["cons", "cyan", "stridor", "retract", "air"];
+    let total = 0;
+
+    groups.forEach(name => {
+        const radios = document.querySelectorAll(`input[name="${name}"]`);
+        radios.forEach(r => {
+            if (r.checked) {
+                total += parseInt(r.value, 10);
+            }
+        });
+    });
+
+    const totalEl = document.getElementById("totalScore");
+    const riskEl  = document.getElementById("riskText");
+    totalEl.textContent = "Összpontszám: " + total;
+
+    let sev = "";
+    if (total <= 2) {
+        sev = "enyhe krupp";
+    } else if (total >= 3 && total <= 5) {
+        sev = "középsúlyos krupp";
+    } else if (total >= 6 && total <= 11) {
+        sev = "súlyos krupp";
+    } else {
+        sev = "életveszélyes állapot / impending respirációs elégtelenség";
+    }
+
+    riskEl.textContent = "Súlyosság: " + sev;
+}
+
+// eventek
+document.querySelectorAll('input[type="radio"]').forEach(r => {
+    r.addEventListener("change", calcKrupp);
+});
+
+// induló számítás
+calcKrupp();
+</script>
+</body>
+</html>
