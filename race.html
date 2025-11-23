@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>RACE score – LVO valószínűsége</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    :root {
+        --bg-light: #f4f4f4;
+        --bg-dark: #121212;
+        --card-light: #ffffff;
+        --card-dark: #1f1f1f;
+        --text-light: #000000;
+        --text-dark: #eeeeee;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 14px;
+        background: var(--bg-light);
+        color: var(--text-light);
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    body.dark {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+    }
+
+    .wrapper {
+        max-width: 520px;
+        margin: 0 auto;
+    }
+
+    .box {
+        background: var(--card-light);
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    body.dark .box {
+        background: var(--card-dark);
+    }
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 4px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .subtitle {
+        font-size: 13px;
+        text-align: center;
+        margin-bottom: 12px;
+        color: #666;
+    }
+
+    body.dark .subtitle {
+        color: #ccc;
+    }
+
+    .section-title {
+        margin-top: 10px;
+        margin-bottom: 4px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .item-group {
+        border-radius: 8px;
+        padding: 6px 8px;
+        margin-bottom: 6px;
+        border: 1px solid rgba(150,150,150,0.3);
+    }
+
+    .option-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 3px 0;
+    }
+
+    .option-row input {
+        margin-top: 2px;
+        transform: scale(1.05);
+    }
+
+    .option-row label {
+        font-size: 13px;
+        cursor: pointer;
+        flex: 1;
+    }
+
+    .note {
+        font-size: 11px;
+        margin-top: 6px;
+        color: #888;
+    }
+
+    body.dark .note {
+        color: #aaa;
+    }
+
+    .result-box {
+        margin-top: 14px;
+        padding: 12px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .result-neutral {
+        background: #607d8b;
+    }
+
+    .result-low {
+        background: #2e7d32;   /* zöld – alacsony LVO valószínűség */
+    }
+
+    .result-high {
+        background: #c62828;   /* piros – magas LVO valószínűség */
+    }
+
+    .score-line {
+        font-size: 16px;
+        margin-bottom: 4px;
+    }
+
+    .explanation {
+        font-size: 12px;
+        font-weight: normal;
+        opacity: 0.95;
+    }
+
+    .disclaimer {
+        margin-top: 8px;
+        font-size: 11px;
+        color: #999;
+        text-align: center;
+    }
+
+    body.dark .disclaimer {
+        color: #bbb;
+    }
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="box">
+        <h2>RACE score</h2>
+        <div class="subtitle">Nagyér-okklúzió (LVO) valószínűségének becslése</div>
+
+        <!-- Arc paresis -->
+        <div class="item-group">
+            <div class="section-title">Arc paresis</div>
+            <div class="option-row">
+                <input type="radio" name="face" id="face0" class="race-item" data-points="0" checked>
+                <label for="face0">Nincs / enyhe aszimmetria – <strong>0 pont</strong></label>
+            </div>
+            <div class="option-row">
+                <input type="radio" name="face" id="face1" class="race-item" data-points="1">
+                <label for="face1">Mérsékelt arcgyengeség – <strong>1 pont</strong></label>
+            </div>
+            <div class="option-row">
+                <input type="radio" name="face" id="face2" class="race-item" data-points="2">
+                <label for="face2">Súlyos arcparesis – <strong>2 pont</strong></label>
+            </div>
+        </div>
+
+        <!-- Kar motoros gyengeség -->
+        <div class="item-group">
+            <div class="section-title">Kar motoros gyengeség</div>
+            <div class="option-row">
+                <input type="radio" name="arm" id="arm0" class="race-item" data-points="0" checked>
+                <label for="arm0">Nincs / enyhe gyengeség – <strong>0 pont</strong></label>
+            </div>
+            <div class="option-row">
+                <input type="radio" name="arm" id="arm1" class="race-item" data-points="1">
+                <label for="arm1">Mérsékelt gyengeség (de nem esik le azonnal) – <strong>1 pont</strong></label>
+            </div>
+            <div class="option-row">
+                <input type="radio" name="arm" id="arm2" class="race-item" data-points="2">
+                <label for="arm2">Súlyos paresis (nem emeli / azonnal leesik) – <strong>2 pont</strong></label>
+            </div>
+        </div>
+
+        <!-- Láb motoros gyengeség -->
+        <div class="item-group">
+            <div class="section-title">Láb motoros gyengeség</div>
+            <div class="option-row">
+                <input type="radio" name="leg" id="leg0" class="race-item" data-points="0" checked>
+                <label for="leg0">Nincs / enyhe gyengeség – <strong>0 pont</strong></label>
+            </div>
+            <div class="option-row">
+                <input type="radio" name="leg" id="leg1" class="race-item" data-points="1">
+                <label for="leg1">Mérsékelt gyengeség – <strong>1 pont</strong></label>
+            </div>
+            <div class="option-row">
+                <input type="radio" name="leg" id="leg2" class="race-item" data-points="2">
+                <label for="leg2">Súlyos paresis – <strong>2 pont</strong></label>
+            </div>
+        </div>
+
+        <!-- Fej- és tekintés deviáció -->
+        <div class="item-group">
+            <div class="section-title">Fej- és tekintés deviáció</div>
+            <div class="option-row">
+                <input type="radio" name="gaze" id="gaze0" class="race-item" data-points="0" checked>
+                <label for="gaze0">Nincs kényszertartás / kóros deviáció – <strong>0 pont</strong></label>
+            </div>
+            <div class="option-row">
+                <input type="radio" name="gaze" id="gaze1" class="race-item" data-points="1">
+                <label for="gaze1">Kényszer fej-/tekintés deviáció – <strong>1 pont</strong></label>
+            </div>
+        </div>
+
+        <!-- Aphasia / agnosia – egyszerűsítve, összpont számít -->
+        <div class="item-group">
+            <div class="section-title">Beszéd / figyelemzavar (aphasia / neglect)</div>
+            <div class="option-row">
+                <input type="radio" name="cortical" id="cort0" class="race-item" data-points="0" checked>
+                <label for="cort0">Nincs egyértelmű beszéd- vagy neglect-zavar – <strong>0 pont</strong></label>
+            </div>
+            <div class="option-row">
+                <input type="radio" name="cortical" id="cort1" class="race-item" data-points="1">
+                <label for="cort1">Enyhe / mérsékelt aphasia vagy neglect – <strong>1 pont</strong></label>
+            </div>
+            <div class="option-row">
+                <input type="radio" name="cortical" id="cort2" class="race-item" data-points="2">
+                <label for="cort2">Súlyos aphasia / teljes neglect – <strong>2 pont</strong></label>
+            </div>
+        </div>
+
+        <div class="note">
+            Válaszd ki a betegnek megfelelő opciókat minden sorban.  
+            A RACE score 0–9 pont között lehet.
+        </div>
+
+        <div id="resultBox" class="result-box result-neutral">
+            <div class="score-line" id="scoreLine">Összpontszám: 0 pont</div>
+            <div class="explanation" id="explanationText">
+                Még nem egyértelmű a LVO valószínűsége – használd a skálát a beteg vizsgálata alapján.
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            Az eszköz tájékoztató jellegű, a klinikai döntést nem helyettesíti.
+        </div>
+    </div>
+</div>
+
+<script>
+// ---- TÉMABEÁLLÍTÁS ÁTVÉTELE INDEXBŐL ----
+(function applyTheme() {
+    try {
+        if (window.parent && window.parent !== window) {
+            if (window.parent.document.body.classList.contains("dark")) {
+                document.body.classList.add("dark");
+                return;
+            }
+        }
+    } catch (e) {
+        // más origin esetén hibát dobhat – ilyenkor átugorjuk
+    }
+
+    const saved = localStorage.getItem("omsz_theme");
+    if (saved === "dark") {
+        document.body.classList.add("dark");
+    }
+})();
+
+// ---- RACE SZÁMÍTÁS ----
+function updateRaceScore() {
+    const inputs = document.querySelectorAll(".race-item");
+    let score = 0;
+
+    inputs.forEach(el => {
+        if (el.checked) {
+            score += parseFloat(el.dataset.points) || 0;
+        }
+    });
+
+    const resultBox = document.getElementById("resultBox");
+    const scoreLine = document.getElementById("scoreLine");
+    const explanationText = document.getElementById("explanationText");
+
+    scoreLine.textContent = "Összpontszám: " + score + " pont";
+
+    resultBox.classList.remove("result-neutral", "result-low", "result-high");
+
+    // RACE 0–4: alacsony LVO valószínűség; ≥5: magas LVO valószínűség
+    if (score === 0) {
+        resultBox.classList.add("result-neutral");
+        explanationText.textContent =
+            "Jelen beállítások mellett nagyon alacsony a súlyos neurológiai deficit, LVO nem valószínű.";
+    } else if (score > 0 && score <= 4) {
+        resultBox.classList.add("result-low");
+        explanationText.innerHTML =
+            "<strong>Alacsony LVO valószínűség (RACE 0–4).</strong><br>" +
+            "Standard stroke-ellátási útvonal javasolt, további klinikai mérlegelés mellett.";
+    } else {
+        resultBox.classList.add("result-high");
+        explanationText.innerHTML =
+            "<strong>Magas LVO valószínűség (RACE ≥5).</strong><br>" +
+            "Nagyér-okklúzió gyanúja – stroke centrum / intervenciós központ mérlegelendő, helyi protokoll szerint.";
+    }
+}
+
+document.querySelectorAll(".race-item").forEach(el => {
+    el.addEventListener("change", updateRaceScore);
+});
+
+// induló számítás
+updateRaceScore();
+</script>
+</body>
+</html>
