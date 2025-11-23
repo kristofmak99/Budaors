@@ -119,6 +119,19 @@
 <script>
 // ---- TÉMABEÁLLÍTÁS ÁTVÉTELE INDEXBŐL ----
 (function applyTheme() {
+    try {
+        // 1) Ha iframe-ben futunk, nézzük meg a szülő body-ját
+        if (window.parent && window.parent !== window) {
+            if (window.parent.document.body.classList.contains("dark")) {
+                document.body.classList.add("dark");
+                return;
+            }
+        }
+    } catch (e) {
+        // ha bármiért hibázik (más origin stb.), akkor hagyjuk
+    }
+
+    // 2) Ha a fenti nem működött, essünk vissza a localStorage-re
     const saved = localStorage.getItem("omsz_theme");
     if (saved === "dark") {
         document.body.classList.add("dark");
