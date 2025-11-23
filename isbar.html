@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>ISBAR segédlet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    :root {
+        --bg: #f2f2f2;
+        --text: #000000;
+        --card: #ffffff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #121212;
+            --text: #f5f5f5;
+            --card: #1f1f1f;
+        }
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    header {
+        text-align: center;
+        padding: 6px 4px 8px 4px;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    .frame-wrap {
+        flex: 1;
+        background: var(--card);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    iframe {
+        border: none;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>ISBAR segédlet</header>
+    <div class="frame-wrap">
+        <!-- Ha máshogy hívják a fájlt, itt írd át az elérési utat -->
+        <iframe src="isbar.pdf"></iframe>
+    </div>
+</div>
+</body>
+</html>
