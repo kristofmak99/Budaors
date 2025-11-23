@@ -2,26 +2,25 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<title>Wells score – tüdőembólia</title>
+<title>Wells score – Tüdőembólia valószínűsége</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     :root {
         --bg-light: #f4f4f4;
-        --card-light: #ffffff;
-        --text-light: #000000;
-        --primary: #0077cc;
-
         --bg-dark: #121212;
+        --card-light: #ffffff;
         --card-dark: #1f1f1f;
+        --text-light: #000000;
         --text-dark: #eeeeee;
     }
 
     body {
         font-family: Arial, sans-serif;
-        background: var(--bg-light);
-        color: var(--text-light);
         margin: 0;
         padding: 14px;
+        background: var(--bg-light);
+        color: var(--text-light);
+        transition: background 0.2s ease, color 0.2s ease;
     }
 
     body.dark {
@@ -29,19 +28,20 @@
         color: var(--text-dark);
     }
 
+    .wrapper {
+        max-width: 520px;
+        margin: 0 auto;
+    }
+
     .box {
         background: var(--card-light);
-        color: inherit;
         padding: 16px;
         border-radius: 12px;
-        max-width: 480px;
-        margin: 0 auto;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
     body.dark .box {
         background: var(--card-dark);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
     h2 {
@@ -53,208 +53,248 @@
 
     .subtitle {
         font-size: 13px;
-        margin-bottom: 14px;
         text-align: center;
-        opacity: 0.8;
+        margin-bottom: 12px;
+        color: #666;
+    }
+
+    body.dark .subtitle {
+        color: #ccc;
     }
 
     .item {
-        border-radius: 10px;
-        padding: 8px 10px;
-        margin-bottom: 6px;
         display: flex;
         align-items: flex-start;
         gap: 8px;
-        background: rgba(0,0,0,0.03);
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(150,150,150,0.25);
     }
 
-    body.dark .item {
-        background: rgba(255,255,255,0.05);
+    .item:last-child {
+        border-bottom: none;
     }
 
-    .item input[type="checkbox"] {
+    .item input {
         margin-top: 3px;
         transform: scale(1.1);
     }
 
-    .item-main {
+    .item label {
         flex: 1;
         font-size: 14px;
+        cursor: pointer;
     }
 
-    .item-points {
-        font-size: 13px;
-        font-weight: bold;
-        white-space: nowrap;
-        align-self: center;
+    .note {
+        font-size: 11px;
+        margin-top: 6px;
+        color: #888;
+    }
+
+    body.dark .note {
+        color: #aaa;
     }
 
     .result-box {
         margin-top: 14px;
         padding: 12px;
         border-radius: 10px;
-        background: var(--primary);
-        color: white;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .result-neutral {
+        background: #607d8b;
+    }
+
+    .result-low {
+        background: #2e7d32;   /* zöld – alacsony valószínűség */
+    }
+
+    .result-medium {
+        background: #f9a825;   /* sárga – közepes valószínűség */
+        color: #000;
+    }
+
+    .result-high {
+        background: #c62828;   /* piros – magas valószínűség */
+    }
+
+    .score-line {
+        font-size: 16px;
+        margin-bottom: 4px;
+    }
+
+    .explanation {
+        font-size: 12px;
+        font-weight: normal;
+        opacity: 0.95;
+    }
+
+    .disclaimer {
+        margin-top: 8px;
+        font-size: 11px;
+        color: #999;
         text-align: center;
     }
 
-    .result-score {
-        font-size: 20px;
-        font-weight: bold;
-    }
-
-    .result-category {
-        margin-top: 4px;
-        font-size: 14px;
-    }
-
-    .hint {
-        margin-top: 8px;
-        font-size: 12px;
-        opacity: 0.9;
+    body.dark .disclaimer {
+        color: #bbb;
     }
 </style>
 </head>
+
 <body>
-<div class="box">
-    <h2>Wells score – PE</h2>
-    <div class="subtitle">Pipáld be, ami igaz a betegre. A pontszám automatikusan frissül.</div>
+<div class="wrapper">
+    <div class="box">
+        <h2>Wells score</h2>
+        <div class="subtitle">Tüdőembólia klinikai valószínűségének becslése</div>
 
-    <!-- 1. Klinikai DVT jelek (3 pont) -->
-    <label class="item">
-        <input type="checkbox" data-points="3">
-        <div class="item-main">
-            Klinikai mélyvénás trombózis jelei (duzzadt, fájdalmas alsó végtag)
+        <div class="item">
+            <input type="checkbox" id="dvtSigns" class="wells-item" value="3">
+            <label for="dvtSigns">
+                Klinikai jelek mélyvénás trombózisra (duzzanat, fájdalom, nyomásérzékeny véna) – <strong>3 pont</strong>
+            </label>
         </div>
-        <div class="item-points">+3</div>
-    </label>
 
-    <!-- 2. PE a legvalószínűbb diagnózis (3 pont) -->
-    <label class="item">
-        <input type="checkbox" data-points="3">
-        <div class="item-main">
-            A tüdőembólia tűnik a legvalószínűbb diagnózisnak
+        <div class="item">
+            <input type="checkbox" id="peMoreLikely" class="wells-item" value="3">
+            <label for="peMoreLikely">
+                Tüdőembólia valószínűbb, mint más diagnózis – <strong>3 pont</strong>
+            </label>
         </div>
-        <div class="item-points">+3</div>
-    </label>
 
-    <!-- 3. Tachycardia > 100/min (1.5 pont) -->
-    <label class="item">
-        <input type="checkbox" data-points="1.5">
-        <div class="item-main">
-            Pulzus &gt; 100/perc
+        <div class="item">
+            <input type="checkbox" id="hrMore100" class="wells-item" value="1.5">
+            <label for="hrMore100">
+                Pulzusszám &gt; 100/perc – <strong>1,5 pont</strong>
+            </label>
         </div>
-        <div class="item-points">+1,5</div>
-    </label>
 
-    <!-- 4. Immobilizáció / műtét (1.5 pont) -->
-    <label class="item">
-        <input type="checkbox" data-points="1.5">
-        <div class="item-main">
-            Immobilizáció &ge; 3 nap vagy nagyobb műtét az elmúlt 4 hétben
+        <div class="item">
+            <input type="checkbox" id="immobil" class="wells-item" value="1.5">
+            <label for="immobil">
+                Immobilizáció (&ge; 3 nap) vagy nagy műtét az elmúlt 4 héten – <strong>1,5 pont</strong>
+            </label>
         </div>
-        <div class="item-points">+1,5</div>
-    </label>
 
-    <!-- 5. Korábbi DVT / PE (1.5 pont) -->
-    <label class="item">
-        <input type="checkbox" data-points="1.5">
-        <div class="item-main">
-            Korábbi mélyvénás trombózis vagy tüdőembólia a kórelőzményben
+        <div class="item">
+            <input type="checkbox" id="historyVTE" class="wells-item" value="1.5">
+            <label for="historyVTE">
+                Korábbi MVT vagy PE – <strong>1,5 pont</strong>
+            </label>
         </div>
-        <div class="item-points">+1,5</div>
-    </label>
 
-    <!-- 6. Hemoptysis (1 pont) -->
-    <label class="item">
-        <input type="checkbox" data-points="1">
-        <div class="item-main">
-            Hemoptysis (véres köpet)
+        <div class="item">
+            <input type="checkbox" id="hemoptysis" class="wells-item" value="1">
+            <label for="hemoptysis">
+                Hemoptoe – <strong>1 pont</strong>
+            </label>
         </div>
-        <div class="item-points">+1</div>
-    </label>
 
-    <!-- 7. Malignitás (1 pont) -->
-    <label class="item">
-        <input type="checkbox" data-points="1">
-        <div class="item-main">
-            Aktív daganatos betegség (kezelés alatt, vagy &lt; 6 hónapja, illetve palliatív)
+        <div class="item">
+            <input type="checkbox" id="malignancy" class="wells-item" value="1">
+            <label for="malignancy">
+                Aktív daganatos betegség (kezelés alatt / &lt; 6 hónapja / palliatív) – <strong>1 pont</strong>
+            </label>
         </div>
-        <div class="item-points">+1</div>
-    </label>
 
-    <div class="result-box">
-        <div>Összpontszám</div>
-        <div id="totalScore" class="result-score">0,0</div>
-        <div id="riskCat" class="result-category">PE valószínűsége: alacsony</div>
-    </div>
+        <div class="note">
+            Pipáld ki az összes fennálló tételt.  
+            A pontszámokat a rendszer automatikusan összegzi.
+        </div>
 
-    <div class="hint">
-        Klaszikus kategóriák: &lt; 2 pont – alacsony, 2–6 – közepes, &gt; 6 – magas kockázat.<br>
-        Egyszerűsített: ≤ 4 pont – „PE nem valószínű”, &gt; 4 pont – „PE valószínű”.
+        <div id="resultBox" class="result-box result-neutral">
+            <div class="score-line" id="scoreLine">Összpontszám: 0,0 pont</div>
+            <div class="explanation" id="explanationText">
+                Még nem állapítható meg a Wells szerinti PE valószínűség – jelöld a kockázati tényezőket.
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            Az eszköz tájékoztató jellegű, a klinikai döntést nem helyettesíti.
+        </div>
     </div>
 </div>
 
 <script>
-function calcWells() {
-    const checkboxes = document.querySelectorAll('.item input[type="checkbox"]');
-    let total = 0;
+// ---- TÉMABEÁLLÍTÁS ÁTVÉTELE INDEXBŐL ----
+(function applyTheme() {
+    try {
+        // Ha iframe-ben fut, nézzük a szülő body-ját
+        if (window.parent && window.parent !== window) {
+            if (window.parent.document.body.classList.contains("dark")) {
+                document.body.classList.add("dark");
+                return;
+            }
+        }
+    } catch (e) {
+        // Más origin esetén hibát dobhat – ilyenkor átugorjuk
+    }
+
+    // Ha nem érjük el a parentet, próbáljuk a localStorage-t
+    const saved = localStorage.getItem("omsz_theme");
+    if (saved === "dark") {
+        document.body.classList.add("dark");
+    }
+})();
+
+// ---- WELLS SZÁMÍTÁS ----
+function updateWellsScore() {
+    const checkboxes = document.querySelectorAll(".wells-item");
+    let score = 0;
 
     checkboxes.forEach(cb => {
         if (cb.checked) {
-            const pts = parseFloat(cb.getAttribute('data-points')) || 0;
-            total += pts;
+            score += parseFloat(cb.value) || 0;
         }
     });
 
-    // kerekítés egy tizedesre
-    const rounded = Math.round(total * 10) / 10;
-    document.getElementById('totalScore').textContent = rounded.toFixed(1).replace('.', ',');
+    const resultBox = document.getElementById("resultBox");
+    const scoreLine = document.getElementById("scoreLine");
+    const explanationText = document.getElementById("explanationText");
 
-    // kockázati kategória
-    let category = "";
-    if (total < 2) {
-        category = "PE valószínűsége: alacsony (klasszikus: < 2 pont)";
-    } else if (total <= 6) {
-        category = "PE valószínűsége: közepes (2–6 pont)";
-    } else {
-        category = "PE valószínűsége: magas (> 6 pont)";
+    scoreLine.textContent = "Összpontszám: " + score.toFixed(1) + " pont";
+
+    resultBox.classList.remove("result-neutral", "result-low", "result-medium", "result-high");
+
+    // Ha egyet sem pipáltak még be: neutrál
+    const anyTouched = Array.from(checkboxes).some(cb => cb.checked);
+    if (!anyTouched) {
+        resultBox.classList.add("result-neutral");
+        explanationText.textContent =
+            "Még nem állapítható meg a Wells szerinti PE valószínűség – jelöld a kockázati tényezőket.";
+        return;
     }
 
-    // egyszerűsített hozzáfűzve
-    if (total <= 4) {
-        category += " • Egyszerűsített: „PE nem valószínű” (≤ 4 pont).";
+    // Klasszikus 3 kategóriás felosztás:
+    // 0–1: alacsony, 2–6: közepes, >6: magas valószínűség
+    if (score <= 1.0) {
+        resultBox.classList.add("result-low");
+        explanationText.innerHTML =
+            "<strong>Alacsony valószínűség (≤ 1 pont).</strong><br>" +
+            "D-dimer negatív eredmény esetén a PE valószínűsége nagyon alacsony.";
+    } else if (score > 1.0 && score <= 6.0) {
+        resultBox.classList.add("result-medium");
+        explanationText.innerHTML =
+            "<strong>Közepes valószínűség (2–6 pont).</strong><br>" +
+            "További labor- és/vagy képalkotó diagnosztika javasolt.";
     } else {
-        category += " • Egyszerűsített: „PE valószínű” (> 4 pont).";
+        resultBox.classList.add("result-high");
+        explanationText.innerHTML =
+            "<strong>Magas valószínűség (> 6 pont).</strong><br>" +
+            "A tüdőembólia erősen valószínű – sürgős képalkotó diagnosztika, szükség esetén empirikus antikoaguláció mérlegelendő.";
     }
-
-    document.getElementById('riskCat').textContent = category;
 }
 
-// események
-document.querySelectorAll('.item input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', calcWells);
+document.querySelectorAll(".wells-item").forEach(cb => {
+    cb.addEventListener("change", updateWellsScore);
 });
 
-// induláskor
-calcWells();
-
-// TÉMA KEZELÉS – ha az index.html postMessage-et küld
-window.addEventListener("message", (event) => {
-    if (!event.data || typeof event.data !== "object") return;
-    if (event.data.type === "SET_THEME") {
-        if (event.data.value === "dark") {
-            document.body.classList.add("dark");
-        } else {
-            document.body.classList.remove("dark");
-        }
-    }
-});
-
-// Ha nincs parent üzenet, akkor a rendszer preferenciát vesszük
-if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    document.body.classList.add("dark");
-}
+// induló állapot
+updateWellsScore();
 </script>
 </body>
 </html>
