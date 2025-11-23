@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+következőt kérem tőled, tekintsd át a HTML fájlomat ami az indexem,	<!DOCTYPE html>
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
@@ -739,6 +739,9 @@
         />
 
      <div class="hospital-list">
+
+           <div class="hospital-list">
+
             <div class="hospital-item">
                 <div class="hospital-name">1. Bethesda Gyermekkórház (SBO)</div>
                 <div class="hospital-row"><span class="hospital-label">TETRA:</span> 4055082</div>
@@ -1265,205 +1268,27 @@ function openHelp(){
 function closeHelp(){ hideModal("helpModal"); }
 
 function openHelpItem(key){
+    let url = "";
+
+    if (key === "ISBAR") {
+        url = "isbar.pdf";   // <-- ide jön az ISBAR PDF
+    }
+    else if (key === "METHANE") {
+        url = "methane.pdf"; // <-- ide jön a METHANE PDF
+    }
+    else {
+        alert("Ehhez a segédlethez még nincs beállítva link.");
+        return;
+    }
+
     const menu = document.getElementById("helpMenu");
     const frame = document.getElementById("helpFrame");
 
-    /* ---- ISBAR ---- */
-    if (key === "ISBAR") {
-        menu.style.display = "none";
-        frame.style.display = "block";
-        frame.src = "isbar.pdf";
-        return;
-    }
-
-    /* ---- METHANE ---- */
-    if (key === "METHANE") {
-        menu.style.display = "none";
-        frame.style.display = "block";
-        frame.src = "methane.pdf";
-        return;
-    }
-
-    /* ---- NORADRENALIN KALKULÁTOR ---- */
-    if (key === "NORAD") {
-        menu.style.display = "none";
-        frame.style.display = "block";
-
-        frame.srcdoc = `
-        <!DOCTYPE html>
-        <html lang="hu">
-        <head>
-        <meta charset="UTF-8">
-        <title>Noradrenalin kalkulátor</title>
-        <style>
-        body {
-            font-family: Arial;
-            padding: 14px;
-            background: #f4f4f4;
-        }
-        .box {
-            background: white;
-            padding: 16px;
-            border-radius: 12px;
-        }
-        label { font-weight: bold; display:block; margin-top:10px; }
-        input, select {
-            width:100%;
-            padding:8px;
-            border-radius:8px;
-            border:1px solid #aaa;
-        }
-        .result {
-            margin-top:18px;
-            padding:14px;
-            background:#0077cc;
-            color:white;
-            text-align:center;
-            border-radius:10px;
-            font-size:20px;
-            font-weight:bold;
-        }
-        </style>
-        </head>
-        
-        <body>
-        <div class="box">
-        <h2>Noradrenalin kalkulátor</h2>
-        
-        <label>Testtömeg (kg)</label>
-        <input id="nWeight" type="number" value="80">
-        
-        <label>Dózis (µg/kg/min)</label>
-        <input id="nDose" type="number" step="0.01" value="0.1">
-        
-        <label>Hígítás</label>
-        <select id="nConc">
-            <option value="1">1 mg / 50 ml</option>
-            <option value="3">3 mg / 50 ml</option>
-            <option value="5">5 mg / 50 ml</option>
-        </select>
-        
-        <div class="result" id="nOut">—</div>
-        </div>
-        
-        <script>
-        function calcNor(){
-            const w = parseFloat(document.getElementById("nWeight").value);
-            const d = parseFloat(document.getElementById("nDose").value);
-            const c = parseFloat(document.getElementById("nConc").value);
-        
-            if(!w || !d){ document.getElementById("nOut").textContent="—"; return;}
-        
-            // mg → µg: 1 mg = 1000 µg
-            const totalUg = c * 1000;
-            const ml = 50;
-            const ugPerMl = totalUg / ml;
-        
-            const mlh = (d * w * 60) / ugPerMl;
-        
-            document.getElementById("nOut").textContent = mlh.toFixed(1) + " ml/h";
-        }
-        
-        document.querySelectorAll("input, select").forEach(el=>{
-            el.addEventListener("input", calcNor);
-        });
-        
-        calcNor();
-        </script>
-        
-        </body>
-        </html>`;
-                return;
-            }
-        
-            /* ---- DOBUTAMIN KALKULÁTOR ---- */
-            if (key === "DOBUT") {
-                menu.style.display = "none";
-                frame.style.display = "block";
-        
-                frame.srcdoc = `
-        <!DOCTYPE html>
-        <html lang="hu">
-        <head>
-        <meta charset="UTF-8">
-        <title>Dobutamin kalkulátor</title>
-        <style>
-        body {
-            font-family: Arial;
-            padding: 14px;
-            background: #f4f4f4;
-        }
-        .box {
-            background:white;
-            padding:16px;
-            border-radius:12px;
-        }
-        label { font-weight:bold; display:block; margin-top:10px; }
-        input, select {
-            width:100%;
-            padding:8px;
-            border-radius:8px;
-            border:1px solid #aaa;
-        }
-        .result {
-            margin-top:18px;
-            padding:14px;
-            background:#0077cc;
-            color:white;
-            text-align:center;
-            border-radius:10px;
-            font-size:20px;
-            font-weight:bold;
-        }
-        </style>
-        </head>
-        
-        <body>
-        <div class="box">
-        <h2>Dobutamin kalkulátor</h2>
-        
-        <label>Testtömeg (kg)</label>
-        <input id="dWeight" type="number" value="80">
-        
-        <label>Dózis (µg/kg/min)</label>
-        <input id="dDose" type="number" step="0.1" value="5">
-        
-        <label>Hígítás</label>
-        <select id="dDil">
-            <option value="5000">250 mg / 50 ml</option>
-            <option value="10000">500 mg / 50 ml</option>
-        </select>
-        
-        <div class="result" id="dOut">—</div>
-        </div>
-        
-        <script>
-        function calcDobu(){
-            const w = parseFloat(document.getElementById("dWeight").value);
-            const d = parseFloat(document.getElementById("dDose").value);
-            const conc = parseFloat(document.getElementById("dDil").value);
-        
-            if(!w || !d){ document.getElementById("dOut").textContent="—"; return;}
-        
-            const mlh = (d * w * 60) / conc;
-        
-            document.getElementById("dOut").textContent = mlh.toFixed(1) + " ml/h";
-        }
-        
-        document.querySelectorAll("input, select").forEach(el=>{
-            el.addEventListener("input", calcDobu);
-        });
-        
-        calcDobu();
-        </script>
-        </body>
-        </html>`;
-                return;
-            }
-
-    /* NINCS BEÁLLÍTVA */
-    alert("Ehhez a segédlethez még nincs beállítva link.");
+    menu.style.display = "none";
+    frame.style.display = "block";
+    frame.src = url;
 }
+
 // AKTUÁLIS
 function openAktualis(){
     showModal("aktualisModal");
