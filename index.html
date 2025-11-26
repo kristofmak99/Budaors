@@ -501,6 +501,20 @@
     @media (max-width: 480px) {
         h1 { font-size: 22px; }
     }
+
+    /* BEOSZTÁS – teljes képernyős modal */
+#beosztasModal.modal-bg {
+    padding: 0; /* ne legyen külső margó/padding */
+}
+
+#beosztasModal .beosztas-fullscreen {
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+}
 </style>
 </head>
 
@@ -586,7 +600,7 @@
 
 <!-- BEOSZTÁS MODAL -->
 <div id="beosztasModal" class="modal-bg">
-    <div class="modal-window">
+    <div class="modal-window beosztas-fullscreen">
         <div class="modal-header">
             Beosztás
             <div class="modal-close" onclick="closeBeosztas()">×</div>
