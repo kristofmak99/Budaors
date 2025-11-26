@@ -82,7 +82,7 @@
     .theme-toggle {
         position: fixed;
         top: 10px;
-        left: 10px;    /* BAL FELSŐ SAROK */
+        left: 10px;      /* BAL FELSŐ SAROK */
         cursor: pointer;
         font-size: 23px;
         padding: 4px 8px;
@@ -495,7 +495,7 @@
         h1 { font-size: 22px; }
     }
 
-    /* BEOSZTÁS – teljes képernyős modal + zoom wrapper */
+    /* BEOSZTÁS – teljes képernyős modal */
     #beosztasModal {
         padding: 0;
     }
@@ -520,8 +520,9 @@
     }
 
     #beosztasFrame {
+        width: 100%;
+        height: 100%;
         border: none;
-        transform-origin: 0 0; /* bal felső sarokból skálázunk */
     }
 </style>
 </head>
@@ -594,7 +595,6 @@
             <div class="tile-label">Szerviz</div>
         </div>
 
-        <!-- SZTM TILE -->
         <div class="tile" onclick="openSZTM()">
             <div class="tile-icon">⏱️</div>
             <div class="tile-label">SZTM</div>
@@ -611,21 +611,7 @@
     <div class="modal-window beosztas-window">
         <div class="modal-header">
             <span>Beosztás</span>
-            <div>
-                <button 
-                    type="button" 
-                    onclick="zoomOutBeosztas()" 
-                    style="margin-right:4px; padding:2px 6px; border-radius:6px; border:1px solid #ccc; cursor:pointer;">
-                    −
-                </button>
-                <button 
-                    type="button" 
-                    onclick="zoomInBeosztas()" 
-                    style="margin-right:8px; padding:2px 6px; border-radius:6px; border:1px solid #ccc; cursor:pointer;">
-                    +
-                </button>
-                <span class="modal-close" onclick="closeBeosztas()">×</span>
-            </div>
+            <span class="modal-close" onclick="closeBeosztas()">×</span>
         </div>
         <div class="beosztas-frame-wrap">
             <iframe
@@ -713,7 +699,7 @@
             </div>
             <div class="phone-item">
                 <div class="phone-name">KÁNY Főorvos 8-20</div>
-                <div class="phone-role">Nyilatkoztatás - Anomáliak</div>
+                <div class="phone-role">Nyilatkoztatás - Anomáliák</div>
                 <div class="phone-number"><a href="tel:+3613116000">+36 1 311 6000</a></div>
                 <div class="phone-number"><a href="tel:+3613913661">+36 1 391 3661</a></div>
             </div>
@@ -1173,7 +1159,6 @@ function setTheme(mode){
         document.body.classList.remove("dark");
         mode = "light";
     }
-
     localStorage.setItem("omsz_theme", mode);
 
     const btn = document.getElementById("themeToggle");
@@ -1230,32 +1215,8 @@ function hideModal(modalId){
 
 /* MODALOK */
 
-// BEOSZTÁS – ZOOM
-let beosztasZoom = 1;
-
-function applyBeosztasZoom() {
-    const frame = document.getElementById("beosztasFrame");
-    if (!frame) return;
-
-    // Trükk: 100/zoom% szélesség + scale(zoom) -> vizuálisan mindig ~100% szélesség
-    frame.style.width  = (100 / beosztasZoom) + "%";
-    frame.style.height = (100 / beosztasZoom) + "%";
-    frame.style.transform = `scale(${beosztasZoom})`;
-}
-
-function zoomInBeosztas() {
-    beosztasZoom = Math.min(beosztasZoom + 0.1, 2);   // max 200%
-    applyBeosztasZoom();
-}
-
-function zoomOutBeosztas() {
-    beosztasZoom = Math.max(beosztasZoom - 0.1, 0.5); // min 50%
-    applyBeosztasZoom();
-}
-
+// BEOSZTÁS
 function openBeosztas(){
-    beosztasZoom = 1;
-    applyBeosztasZoom();
     showModal("beosztasModal");
 }
 function closeBeosztas(){
@@ -1524,7 +1485,7 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     }
 
-    // téma betöltés
+    // Téma betöltés
     const saved = localStorage.getItem("omsz_theme");
     const prefersDark = window.matchMedia &&
         window.matchMedia("(prefers-color-scheme: dark)").matches;
