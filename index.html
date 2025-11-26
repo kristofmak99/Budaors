@@ -82,7 +82,7 @@
     .theme-toggle {
         position: fixed;
         top: 10px;
-        right: 10px;
+        left: 10px;    /* BAL FELSŐ SAROK */
         cursor: pointer;
         font-size: 23px;
         padding: 4px 8px;
@@ -495,7 +495,7 @@
         h1 { font-size: 22px; }
     }
 
-    /* BEOSZTÁS – teljes képernyős modal */
+    /* BEOSZTÁS – teljes képernyős modal + zoom wrapper */
     #beosztasModal {
         padding: 0;
     }
@@ -507,12 +507,21 @@
         max-height: 100vh;
         border-radius: 0;
         box-shadow: none;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .beosztas-frame-wrap {
+        flex: 1;
+        overflow: auto;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
     }
 
     #beosztasFrame {
-        width: 100%;
-        height: 100%;
         border: none;
+        transform-origin: 0 0; /* bal felső sarokból skálázunk */
     }
 </style>
 </head>
@@ -601,14 +610,30 @@
 <div id="beosztasModal" class="modal-bg">
     <div class="modal-window beosztas-window">
         <div class="modal-header">
-            Beosztás
-            <div class="modal-close" onclick="closeBeosztas()">×</div>
+            <span>Beosztás</span>
+            <div>
+                <button 
+                    type="button" 
+                    onclick="zoomOutBeosztas()" 
+                    style="margin-right:4px; padding:2px 6px; border-radius:6px; border:1px solid #ccc; cursor:pointer;">
+                    −
+                </button>
+                <button 
+                    type="button" 
+                    onclick="zoomInBeosztas()" 
+                    style="margin-right:8px; padding:2px 6px; border-radius:6px; border:1px solid #ccc; cursor:pointer;">
+                    +
+                </button>
+                <span class="modal-close" onclick="closeBeosztas()">×</span>
+            </div>
         </div>
-        <iframe
-            id="beosztasFrame"
-            class="modal-content"
-            src="https://docs.google.com/spreadsheets/d/1nj7Zyt_qgBCqjYpO3hdsQZaCY2TyQHfg4kgoBIuWsEs/edit?usp=sharing">
-        </iframe>
+        <div class="beosztas-frame-wrap">
+            <iframe
+                id="beosztasFrame"
+                class="modal-content"
+                src="https://docs.google.com/spreadsheets/d/1nj7Zyt_qgBCqjYpO3hdsQZaCY2TyQHfg4kgoBIuWsEs/edit?usp=sharing">
+            </iframe>
+        </div>
     </div>
 </div>
 
@@ -1205,8 +1230,32 @@ function hideModal(modalId){
 
 /* MODALOK */
 
-// BEOSZTÁS
+// BEOSZTÁS – ZOOM
+let beosztasZoom = 1;
+
+function applyBeosztasZoom() {
+    const frame = document.getElementById("beosztasFrame");
+    if (!frame) return;
+
+    // Trükk: 100/zoom% szélesség + scale(zoom) -> vizuálisan mindig ~100% szélesség
+    frame.style.width  = (100 / beosztasZoom) + "%";
+    frame.style.height = (100 / beosztasZoom) + "%";
+    frame.style.transform = `scale(${beosztasZoom})`;
+}
+
+function zoomInBeosztas() {
+    beosztasZoom = Math.min(beosztasZoom + 0.1, 2);   // max 200%
+    applyBeosztasZoom();
+}
+
+function zoomOutBeosztas() {
+    beosztasZoom = Math.max(beosztasZoom - 0.1, 0.5); // min 50%
+    applyBeosztasZoom();
+}
+
 function openBeosztas(){
+    beosztasZoom = 1;
+    applyBeosztasZoom();
     showModal("beosztasModal");
 }
 function closeBeosztas(){
