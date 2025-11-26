@@ -515,6 +515,56 @@
     border-radius: 0;
     box-shadow: none;
 }
+
+    /* BEOSZTÁS – teljes képernyős + zoom */
+#beosztasModal.modal-bg {
+    padding: 0; /* ne legyen külső margó/padding */
+}
+
+#beosztasModal .beosztas-fullscreen {
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.beosztas-frame-wrap {
+    flex: 1;
+    overflow: auto;
+}
+
+/* Itt fogjuk skálázni az iframe-et */
+#beosztasFrame {
+    transform-origin: 0 0;
+}
+
+/* Zoom gombok a fejlécben */
+.beosztas-header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.zoom-btn {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 12px;
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+.zoom-btn:active {
+    transform: scale(0.95);
+}
+
+body.dark .zoom-btn {
+    background: #333;
+    border-color: #555;
+    color: #eee;
+}
 </style>
 </head>
 
@@ -602,12 +652,21 @@
 <div id="beosztasModal" class="modal-bg">
     <div class="modal-window beosztas-fullscreen">
         <div class="modal-header">
-            Beosztás
-            <div class="modal-close" onclick="closeBeosztas()">×</div>
+            <span>Beosztás</span>
+            <div class="beosztas-header-right">
+                <button class="zoom-btn" onclick="zoomOutBeosztas()">−</button>
+                <button class="zoom-btn" onclick="resetBeosztasZoom()">100%</button>
+                <button class="zoom-btn" onclick="zoomInBeosztas()">+</button>
+                <div class="modal-close" onclick="closeBeosztas()">×</div>
+            </div>
         </div>
-        <iframe class="modal-content"
-            src="https://docs.google.com/spreadsheets/d/1nj7Zyt_qgBCqjYpO3hdsQZaCY2TyQHfg4kgoBIuWsEs/edit?usp=sharing">
-        </iframe>
+        <div class="beosztas-frame-wrap">
+            <iframe
+                id="beosztasFrame"
+                class="modal-content"
+                src="https://docs.google.com/spreadsheets/d/1nj7Zyt_qgBCqjYpO3hdsQZaCY2TyQHfg4kgoBIuWsEs/edit?usp=sharing">
+            </iframe>
+        </div>
     </div>
 </div>
 
@@ -1194,8 +1253,38 @@ function hideModal(modalId){
 /* MODALOK */
 
 // BEOSZTÁS
-function openBeosztas(){ showModal("beosztasModal"); }
+function openBeosztas(){
+    showModal("beosztasModal");
+    resetBeosztasZoom(); // nyitáskor 100%
+}
 function closeBeosztas(){ hideModal("beosztasModal"); }
+
+/* BEOSZTÁS ZOOM KEZELÉS */
+let beosztasZoom = 1;
+
+function applyBeosztasZoom() {
+    const frame = document.getElementById("beosztasFrame");
+    if (!frame) return;
+
+    frame.style.transform = `scale(${beosztasZoom})`;
+    frame.style.width = (100 / beosztasZoom) + "%";
+    frame.style.height = (100 / beosztasZoom) + "%";
+}
+
+function zoomInBeosztas() {
+    beosztasZoom = Math.min(beosztasZoom + 0.1, 2); // max 200%
+    applyBeosztasZoom();
+}
+
+function zoomOutBeosztas() {
+    beosztasZoom = Math.max(beosztasZoom - 0.1, 0.5); // min 50%
+    applyBeosztasZoom();
+}
+
+function resetBeosztasZoom() {
+    beosztasZoom = 1;
+    applyBeosztasZoom();
+}
 
 // BEOSZTÁS KÉRÉS
 function openBeosztasKeres(){
