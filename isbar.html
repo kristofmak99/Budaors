@@ -2,71 +2,189 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<title>ISBAR segédlet</title>
+<title>ISBAR – Strukturált betegátadás</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     :root {
-        --bg: #f2f2f2;
-        --text: #000000;
-        --card: #ffffff;
+        --bg-light: #f4f4f4;
+        --bg-dark: #121212;
+        --card-light: #ffffff;
+        --card-dark: #1f1f1f;
+        --text-light: #000000;
+        --text-dark: #eeeeee;
+        --accent: #0077cc;
     }
 
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --bg: #121212;
-            --text: #f5f5f5;
-            --card: #1f1f1f;
-        }
-    }
-
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        background: var(--bg);
-        color: var(--text);
+    body {
         font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 14px;
+        background: var(--bg-light);
+        color: var(--text-light);
+        transition: background 0.2s ease, color 0.2s ease;
     }
 
-    .container {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        max-width: 900px;
+    body.dark {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+    }
+
+    .box {
+        background: var(--card-light);
+        padding: 16px;
+        border-radius: 12px;
+        max-width: 520px;
         margin: 0 auto;
-        padding: 8px;
-        box-sizing: border-box;
-    }
-
-    header {
-        text-align: center;
-        padding: 6px 4px 8px 4px;
-        font-weight: 600;
-        font-size: 18px;
-    }
-
-    .frame-wrap {
-        flex: 1;
-        background: var(--card);
-        border-radius: 10px;
-        overflow: hidden;
         box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
-    iframe {
-        border: none;
-        width: 100%;
-        height: 100%;
+    body.dark .box {
+        background: var(--card-dark);
+    }
+
+    h1 {
+        margin: 0 0 6px 0;
+        font-size: 22px;
+        text-align: center;
+    }
+
+    h2 {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        text-align: center;
+        font-weight: normal;
+        opacity: 0.8;
+    }
+
+    .section {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    body.dark .section {
+        border-color: rgba(255,255,255,0.12);
+    }
+
+    .section-title {
+        font-weight: bold;
+        margin-bottom: 4px;
+        font-size: 15px;
+    }
+
+    .section-key {
+        font-weight: bold;
+        color: var(--accent);
+        margin-right: 6px;
+    }
+
+    ul {
+        margin: 4px 0 0 16px;
+        padding: 0;
+        font-size: 13px;
+    }
+
+    .example {
+        margin-top: 8px;
+        font-size: 12px;
+        opacity: 0.9;
+    }
+
+    .hint {
+        margin-top: 12px;
+        font-size: 11px;
+        text-align: center;
+        color: #999;
+    }
+    body.dark .hint {
+        color: #ccc;
     }
 </style>
 </head>
 <body>
-<div class="container">
-    <header>ISBAR segédlet</header>
-    <div class="frame-wrap">
-        <!-- Ha máshogy hívják a fájlt, itt írd át az elérési utat -->
-        <iframe src="isbar.pdf"></iframe>
+<div class="box">
+    <h1>ISBAR</h1>
+    <h2>Strukturált betegátadás/előrejelzés segédlet</h2>
+
+    <!-- I – Identification -->
+    <div class="section">
+        <div class="section-title">
+            <span class="section-key">I – Identification</span> (azonosítás)
+        </div>
+        <ul>
+            <li>Mutatkozz be: név, mentőegység.</li>
+            <li>Beteg azonosítása: név (ha ismert), nem, életkor / becsült életkor.</li>
+            <li>Eset azonosító / cím / helyszín, ha releváns.</li>
+        </ul>
+        </div>
+    </div>
+
+    <!-- S – Situation -->
+    <div class="section">
+        <div class="section-title">
+            <span class="section-key">S – Situation</span> (jelen helyzet)
+        </div>
+        <ul>
+            <li>Miért hívtad / miért kerül a beteg a kórházba?</li>
+            <li>Fő panasz, jelen tünetek.</li>
+            <li>Aktuális állapot röviden (stabil / instabil).</li>
+        </ul>
+        </div>
+    </div>
+
+    <!-- B – Background -->
+    <div class="section">
+        <div class="section-title">
+            <span class="section-key">B – Background</span> (előzmények)
+        </div>
+        <ul>
+            <li>Fontosabb anamnézis: ismert betegségek, műtétek.</li>
+            <li>Gyógyszerek, allergiák, antikoagulánsok.</li>
+            <li>Az esemény körülményei (mióta tart, mi váltotta ki, stb.).</li>
+        </ul>
+        </div>
+    </div>
+
+    <!-- A – Assessment -->
+    <div class="section">
+        <div class="section-title">
+            <span class="section-key">A – Assessment</span> (vizsgálati eredmények)
+        </div>
+        <ul>
+            <li>ABCDE főbb pontok, eltérések kiemelve.</li>
+            <li>Vitalparaméterek (RR, P, SpO₂, GCS, vércukor stb.).</li>
+            <li>EKG, fizikális eltérések, score-ok (pl. RACE, Wells) ha relevánsak.</li>
+        </ul>
+        </div>
+    </div>
+
+    <!-- R – Recommendation -->
+    <div class="section">
+        <div class="section-title">
+            <span class="section-key">R – Recommendation</span> (kérés / terv)
+        </div>
+        <ul>
+            <li>Mit kérsz a fogadó orvostól? (pl. STROKE, Légútbiztosítás stb.).</li>
+            <li>Mi a feltételezett irány diagnózis?</li>
+            <li>Esetleges speciális igények.</li>
+        </ul>
+        </div>
+    </div>
+
+    <div class="hint">
+        Tipp: tartsd röviden és lényegre törően, maximum 1–2 percben, a kritikus információkra koncentrálva.
     </div>
 </div>
+
+<script>
+// Téma átvétele az indexből
+(function applyTheme() {
+    const saved = localStorage.getItem("omsz_theme");
+    if (saved === "dark") {
+        document.body.classList.add("dark");
+    }
+})();
+</script>
 </body>
 </html>
