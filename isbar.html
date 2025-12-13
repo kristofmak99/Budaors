@@ -99,4 +99,81 @@
 <body>
 <div class="box">
     <h1>ISBAR</h1>
-    <h2>Strukturált betegát
+    <h2>Strukturált betegátadás / előrejelzés segédlet</h2>
+
+    <!-- I – Identification -->
+    <div class="section">
+        <div class="section-title">
+            <span class="section-key">I – Identification</span> (azonosítás)
+        </div>
+        <ul>
+            <li>Mutatkozz be: név, mentőegység.</li>
+            <li>Beteg azonosítása: név (ha ismert), nem, életkor / becsült életkor.</li>
+            <li>Eset azonosító / cím / helyszín, ha releváns.</li>
+        </ul>
+    </div>
+
+    <!-- S – Situation -->
+    <div class="section">
+        <div class="section-title">
+            <span class="section-key">S – Situation</span> (jelen helyzet)
+        </div>
+        <ul>
+            <li>Miért hívtad / miért kerül a beteg a kórházba?</li>
+            <li>Fő panasz, jelen tünetek.</li>
+            <li>Aktuális állapot röviden (stabil / instabil).</li>
+        </ul>
+    </div>
+
+    <!-- B – Background -->
+    <div class="section">
+        <div class="section-title">
+            <span class="section-key">B – Background</span> (előzmények)
+        </div>
+        <ul>
+            <li>Fontosabb anamnézis: ismert betegségek, műtétek.</li>
+            <li>Gyógyszerek, allergiák, antikoagulánsok.</li>
+            <li>Az esemény körülményei (mióta tart, mi váltotta ki, stb.).</li>
+        </ul>
+    </div>
+
+    <!-- A – Assessment -->
+    <div class="section">
+        <div class="section-title">
+            <span class="section-key">A – Assessment</span> (vizsgálati eredmények)
+        </div>
+        <ul>
+            <li>ABCDE főbb pontok, eltérések kiemelve.</li>
+            <li>Vitalparaméterek (RR, P, SpO₂, GCS, vércukor stb.).</li>
+            <li>EKG, fizikális eltérések, score-ok (pl. RACE, Wells), ha relevánsak.</li>
+        </ul>
+    </div>
+
+    <!-- R – Recommendation -->
+    <div class="section">
+        <div class="section-title">
+            <span class="section-key">R – Recommendation</span> (kérés / terv)
+        </div>
+        <ul>
+            <li>Mit kérsz a fogadó orvostól? (pl. STROKE, légútbiztosítás stb.).</li>
+            <li>Mi a feltételezett iránydiagnózis?</li>
+            <li>Esetleges speciális igények.</li>
+        </ul>
+    </div>
+
+    <div class="hint">
+        Tipp: tartsd röviden és lényegre törően, maximum 1–2 percben, a kritikus információkra koncentrálva.
+    </div>
+</div>
+
+<script>
+// Téma átvétele az indexből
+(function applyTheme() {
+    const saved = localStorage.getItem("omsz_theme");
+    if (saved === "dark") {
+        document.body.classList.add("dark");
+    }
+})();
+</script>
+</body>
+</html>
