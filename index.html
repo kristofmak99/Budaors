@@ -690,15 +690,34 @@
 <div id="carsModal" class="modal-bg">
     <div class="modal-window">
         <div class="modal-header">
-            Gépkocsi könyvek
+            Gépkocsi könyvek / tankolások
             <div class="modal-close" onclick="closeCars()">×</div>
         </div>
-        <div id="carMenu" class="modal-menu">
-            <button class="menu-btn" onclick="openCarForm('278')">MA 00-278</button>
-            <button class="menu-btn" onclick="openCarForm('02')">MA 12-02</button>
-            <button class="menu-btn" onclick="openCarForm('81')">MA 10-81</button>
-            <button class="menu-btn" onclick="openCarForm('25')">MA 08-25</button>
+
+        <div class="modal-menu" id="carMenuWrapper">
+            <!-- Fülek -->
+            <div class="car-tabs">
+                <button id="carTabBook" onclick="setCarTab('book')">Gépkocsi könyv</button>
+                <button id="carTabFuel" onclick="setCarTab('fuel')">Tankolás</button>
+            </div>
+
+            <!-- GÉPKOCSI KÖNYV LISTA -->
+            <div id="carMenuBook" class="car-menu-list">
+                <button class="menu-btn" onclick="openCarForm('book','278')">MA 00-278</button>
+                <button class="menu-btn" onclick="openCarForm('book','02')">MA 12-02</button>
+                <button class="menu-btn" onclick="openCarForm('book','81')">MA 10-81</button>
+                <button class="menu-btn" onclick="openCarForm('book','25')">MA 08-25</button>
+            </div>
+
+            <!-- TANKOLÁS LISTA -->
+            <div id="carMenuFuel" class="car-menu-list" style="display:none;">
+                <button class="menu-btn" onclick="openCarForm('fuel','278')">MA 00-278 – tankolás</button>
+                <button class="menu-btn" onclick="openCarForm('fuel','02')">MA 12-02 – tankolás</button>
+                <button class="menu-btn" onclick="openCarForm('fuel','81')">MA 10-81 – tankolás</button>
+                <button class="menu-btn" onclick="openCarForm('fuel','25')">MA 08-25 – tankolás</button>
+            </div>
         </div>
+
         <iframe id="carFrame" class="modal-content" style="display:none;"></iframe>
     </div>
 </div>
@@ -1296,29 +1315,85 @@ function openChecklistForm(type){
 }
 
 // GÉPKOCSI
+// GÉPKOCSI – fülek + megnyitás
 function openCars(){
-    const menu = document.getElementById("carMenu");
     const fr   = document.getElementById("carFrame");
-    if (menu && fr) {
-        menu.style.display = "flex";
-        fr.style.display   = "none";
+    const book = document.getElementById("carMenuBook");
+    const fuel = document.getElementById("carMenuFuel");
+
+    if (fr && book && fuel) {
+        fr.style.display = "none";
         fr.src = "";
+        book.style.display = "flex";
+        fuel.style.display = "none";
     }
+    setCarTab('book');   // alapértelmezés: gépkocsi könyv fül
     showModal("carsModal");
 }
-function closeCars(){ hideModal("carsModal"); }
 
-function openCarForm(id){
+function closeCars(){
+    hideModal("carsModal");
+}
+
+// fülek állítása
+function setCarTab(tab){
+    const book = document.getElementById("carMenuBook");
+    const fuel = document.getElementById("carMenuFuel");
+    const tabBook = document.getElementById("carTabBook");
+    const tabFuel = document.getElementById("carTabFuel");
+
+    if (!book || !fuel || !tabBook || !tabFuel) return;
+
+    if (tab === 'fuel') {
+        book.style.display = "none";
+        fuel.style.display = "flex";
+        tabFuel.classList.add("active");
+        tabBook.classList.remove("active");
+    } else {
+        book.style.display = "flex";
+        fuel.style.display = "none";
+        tabBook.classList.add("active");
+        tabFuel.classList.remove("active");
+    }
+
+    // ha fület váltasz, az iframe tűnjön el
+    const fr = document.getElementById("carFrame");
+    if (fr) {
+        fr.style.display = "none";
+        fr.src = "";
+    }
+}
+
+// űrlap megnyitása
+function openCarForm(type, id){
     let url = "";
-    if (id === "278") url = "https://forms.gle/9S9Fe9SsCXeaWpVR7";
-    if (id === "02")  url = "https://forms.gle/LwaQnVrVjgJ1xmwZ9";
-    if (id === "81")  url = "https://forms.gle/GR18YETWNaJroxsP9";
-    if (id === "25")  url = "https://forms.gle/fqv9RG8Atk8BQGMXA";
 
-    const menu = document.getElementById("carMenu");
-    const fr   = document.getElementById("carFrame");
-    if (menu && fr) {
-        menu.style.display = "none";
+    if (type === "book") {
+        // GÉPKOCSI KÖNYV – a régi linkek
+        if (id === "278") url = "https://forms.gle/9S9Fe9SsCXeaWpVR7";
+        if (id === "02")  url = "https://forms.gle/LwaQnVrVjgJ1xmwZ9";
+        if (id === "81")  url = "https://forms.gle/GR18YETWNaJroxsP9";
+        if (id === "25")  url = "https://forms.gle/fqv9RG8Atk8BQGMXA";
+    } else if (type === "fuel") {
+        // TANKOLÁS – IDE ÍRD BE A SAJÁT LINKJEIDET
+        if (id === "278") url = "https://forms.gle/PELDALINK_278";
+        if (id === "02")  url = "https://forms.gle/PELDALINK_02";
+        if (id === "81")  url = "https://forms.gle/PELDALINK_81";
+        if (id === "25")  url = "https://forms.gle/PELDALINK_25";
+    }
+
+    if (!url) {
+        alert("Ehhez a menüponthoz még nincs beállítva link.");
+        return;
+    }
+
+    const fr = document.getElementById("carFrame");
+    const book = document.getElementById("carMenuBook");
+    const fuel = document.getElementById("carMenuFuel");
+
+    if (fr && book && fuel) {
+        book.style.display = "none";
+        fuel.style.display = "none";
         fr.style.display   = "block";
         fr.src = url;
     }
