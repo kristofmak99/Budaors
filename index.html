@@ -629,7 +629,7 @@
             <div class="tile-label">Szerviz</div>
         </div>
 
-        <div class="tile" onclick="openSZTM()">
+        <div class="tile" onclick="window.location.href='https://sztm.mentok.hu'">
             <div class="tile-icon">⏱️</div>
             <div class="tile-label">SZTM</div>
         </div>
@@ -1169,20 +1169,6 @@
     </div>
 </div>
 
-<!-- SZTM MODAL -->
-<div id="sztmModal" class="modal-bg">
-    <div class="modal-window">
-        <div class="modal-header">
-            SZTM – munkaidő jelentés
-            <div class="modal-close" onclick="closeSZTM()">×</div>
-        </div>
-        <iframe class="modal-content"
-            src="https://sztm.mentok.hu"
-            allowfullscreen>
-        </iframe>
-    </div>
-</div>
-
 <script>
 // PIN – 0278, 1 hétig megjegyezve
 function checkPIN(){
@@ -1530,14 +1516,6 @@ function openServiceItem(type){
         fr.style.display   = "block";
         fr.src = url;
     }
-}
-
-// SZTM
-function openSZTM(){
-    showModal("sztmModal");
-}
-function closeSZTM(){
-    hideModal("sztmModal");
 }
 
 /* BADGE – BEOSZTÁS KÉRÉS */
