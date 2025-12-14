@@ -82,7 +82,7 @@
     .theme-toggle {
         position: fixed;
         top: 10px;
-        left: 10px;
+        left: 10px;      /* BAL FELSŐ SAROK */
         cursor: pointer;
         font-size: 23px;
         padding: 4px 8px;
@@ -1144,7 +1144,7 @@
                     </span>
                 </div>
                 <a class="hospital-nav" href="waze://?q=1076 Budapest, Péterfy Sándor utca 8-20" target="_blank">Navigáció (Waze)</a>
-        </div>
+         </div>
     </div>
 </div>
 
@@ -1166,7 +1166,7 @@
         <iframe id="serviceFrame" class="modal-content" src="" style="display:none;" allowfullscreen></iframe>
     </div>
 </div>
-    
+
 <script>
 // PIN – 0278, 1 hétig megjegyezve
 function checkPIN(){
@@ -1365,7 +1365,7 @@ function openCarForm(type, id){
         return;
     }
 
-    const fr = document.getElementById("carFrame");
+    const fr   = document.getElementById("carFrame");
     const book = document.getElementById("carMenuBook");
     const fuel = document.getElementById("carMenuFuel");
 
@@ -1549,6 +1549,7 @@ function vibrateTap() {
 
 /* INIT */
 document.addEventListener("DOMContentLoaded", function(){
+    // AUTO-PIN SKIP – max. 1 hétig
     const pinOK   = localStorage.getItem("omsz_pin_verified");
     const pinTime = localStorage.getItem("omsz_pin_time");
     if (pinOK === "true" && pinTime) {
@@ -1563,6 +1564,7 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     }
 
+    // Téma betöltés
     const saved = localStorage.getItem("omsz_theme");
     const prefersDark = window.matchMedia &&
         window.matchMedia("(prefers-color-scheme: dark)").matches;
