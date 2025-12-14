@@ -633,6 +633,11 @@
             <div class="tile-icon">⏱️</div>
             <div class="tile-label">SZTM</div>
         </div>
+
+        <div class="tile" onclick="openQR()">
+            <div class="tile-icon">📷</div>
+            <div class="tile-label">QR olvasó</div>
+        </div>
     </div>
 
     <div class="footer">
@@ -1167,8 +1172,26 @@
 
         <iframe id="serviceFrame" class="modal-content" src="" style="display:none;" allowfullscreen></iframe>
     </div>
+
+<!-- QR KÓD OLVASÓ MODAL -->
+<div id="qrModal" class="modal-bg">
+    <div class="modal-window" style="max-width:420px; height:430px;">
+        <div class="modal-header">
+            QR kód olvasó
+            <div class="modal-close" onclick="closeQR()">×</div>
+        </div>
+        <div style="padding:10px; display:flex; flex-direction:column; gap:8px;">
+            <div id="qrReader" style="width:100%; max-width:380px; margin:0 auto;"></div>
+            <div id="qrStatus" style="font-size:12px; text-align:center; opacity:0.8;">
+                Engedélyezd a kamera hozzáférést, majd tartsd a QR-kódot a keretbe. 
+                A találat után automatikusan megnyílik a hivatkozás.
+            </div>
+        </div>
+    </div>
 </div>
 
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    
 <script>
 // PIN – 0278, 1 hétig megjegyezve
 function checkPIN(){
@@ -1473,6 +1496,78 @@ function filterHospitals() {
         const text = nameEl ? nameEl.textContent.toLowerCase() : "";
         item.style.display = text.includes(query) ? "" : "none";
     });
+}
+
+// ---- QR KÓD OLVASÓ ----
+let qrScanner = null;
+
+function openQR() {
+    showModal("qrModal");
+
+    const statusEl = document.getElementById("qrStatus");
+    if (statusEl) {
+        statusEl.textContent = "Engedélyezd a kamera hozzáférést, majd tartsd a QR-kódot a keretbe.";
+    }
+
+    // Ha már fut, ne indítsuk újra
+    if (qrScanner) return;
+
+    // html5-qrcode inicializálás
+    qrScanner = new Html5Qrcode("qrReader");
+
+    const config = {
+        fps: 10,
+        qrbox: 250,
+        // mobilon is jól működjön:
+        aspectRatio: 1.0
+    };
+
+    function onScanSuccess(decodedText, decodedResult) {
+        // Scanner leállítása és törlése
+        qrScanner.stop().then(() => {
+            qrScanner.clear();
+            qrScanner = null;
+        }).catch(err => {
+            console.warn("Nem sikerült leállítani a QR scannert:", err);
+            qrScanner = null;
+        });
+
+        closeQR();
+
+        // Automatikus átirányítás
+        // Ha nem linknek tűnik, akkor is megpróbáljuk megnyitni
+        window.location.href = decodedText;
+    }
+
+    function onScanFailure(error) {
+        // ide nem kell semmi, csak csendben próbálkozik tovább
+    }
+
+    qrScanner.start(
+        { facingMode: "environment" }, // hátlapi kamera, ha van
+        config,
+        onScanSuccess,
+        onScanFailure
+    ).catch(err => {
+        console.error("QR indítás hiba:", err);
+        if (statusEl) {
+            statusEl.textContent = "Nem sikerült indítani a kamerát: " + err;
+        }
+    });
+}
+
+function closeQR() {
+    hideModal("qrModal");
+
+    if (qrScanner) {
+        qrScanner.stop().then(() => {
+            qrScanner.clear();
+            qrScanner = null;
+        }).catch(err => {
+            console.warn("QR leállítás hiba:", err);
+            qrScanner = null;
+        });
+    }
 }
 
 // SZERVIZ
