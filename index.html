@@ -82,7 +82,7 @@
     .theme-toggle {
         position: fixed;
         top: 10px;
-        left: 10px;      /* BAL FELSŐ SAROK */
+        left: 10px;
         cursor: pointer;
         font-size: 23px;
         padding: 4px 8px;
@@ -825,7 +825,7 @@
         />
 
         <div class="hospital-list">
-
+            
             <div class="hospital-item">
                 <div class="hospital-name">1. Bethesda Gyermekkórház (SBO)</div>
                 <div class="hospital-row"><span class="hospital-label">TETRA:</span> 4055082</div>
@@ -1149,8 +1149,6 @@
                     </span>
                 </div>
                 <a class="hospital-nav" href="waze://?q=1076 Budapest, Péterfy Sándor utca 8-20" target="_blank">Navigáció (Waze)</a>
-            </div>
-
         </div>
     </div>
 </div>
@@ -1172,6 +1170,7 @@
 
         <iframe id="serviceFrame" class="modal-content" src="" style="display:none;" allowfullscreen></iframe>
     </div>
+</div>
 
 <!-- QR KÓD OLVASÓ MODAL -->
 <div id="qrModal" class="modal-bg">
@@ -1190,6 +1189,7 @@
     </div>
 </div>
 
+<!-- QR könyvtár -->
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     
 <script>
@@ -1324,7 +1324,6 @@ function openChecklistForm(type){
 }
 
 // GÉPKOCSI
-// GÉPKOCSI – fülek + megnyitás
 function openCars(){
     const fr   = document.getElementById("carFrame");
     const book = document.getElementById("carMenuBook");
@@ -1336,7 +1335,7 @@ function openCars(){
         book.style.display = "flex";
         fuel.style.display = "none";
     }
-    setCarTab('book');   // alapértelmezés: gépkocsi könyv fül
+    setCarTab('book');
     showModal("carsModal");
 }
 
@@ -1344,7 +1343,6 @@ function closeCars(){
     hideModal("carsModal");
 }
 
-// fülek állítása
 function setCarTab(tab){
     const book = document.getElementById("carMenuBook");
     const fuel = document.getElementById("carMenuFuel");
@@ -1365,7 +1363,6 @@ function setCarTab(tab){
         tabFuel.classList.remove("active");
     }
 
-    // ha fület váltasz, az iframe tűnjön el
     const fr = document.getElementById("carFrame");
     if (fr) {
         fr.style.display = "none";
@@ -1373,18 +1370,15 @@ function setCarTab(tab){
     }
 }
 
-// űrlap megnyitása
 function openCarForm(type, id){
     let url = "";
 
     if (type === "book") {
-        // GÉPKOCSI KÖNYV – a régi linkek
         if (id === "278") url = "https://forms.gle/9S9Fe9SsCXeaWpVR7";
         if (id === "02")  url = "https://forms.gle/QcXs7idh6HEirhBR6";
         if (id === "81")  url = "https://forms.gle/BTK9mMUbAmZRT3c77";
         if (id === "25")  url = "https://forms.gle/bKcCqp8CimRAwATC9";
     } else if (type === "fuel") {
-        // TANKOLÁS – IDE ÍRD BE A SAJÁT LINKJEIDET
         if (id === "278") url = "https://forms.gle/b26XRPCydHKYGCbd9";
         if (id === "02")  url = "https://forms.gle/WkkNuDaN1ePEYYd29";
         if (id === "81")  url = "https://forms.gle/EUrNrfdaVEc2oGaR7";
@@ -1509,21 +1503,26 @@ function openQR() {
         statusEl.textContent = "Engedélyezd a kamera hozzáférést, majd tartsd a QR-kódot a keretbe.";
     }
 
+    // Ellenőrizzük, hogy a könyvtár tényleg betöltődött
+    if (typeof Html5Qrcode === "undefined") {
+        if (statusEl) {
+            statusEl.textContent = "A QR olvasó könyvtár nem töltődött be. Ellenőrizd az internetkapcsolatot.";
+        }
+        return;
+    }
+
     // Ha már fut, ne indítsuk újra
     if (qrScanner) return;
 
-    // html5-qrcode inicializálás
     qrScanner = new Html5Qrcode("qrReader");
 
     const config = {
         fps: 10,
         qrbox: 250,
-        // mobilon is jól működjön:
         aspectRatio: 1.0
     };
 
     function onScanSuccess(decodedText, decodedResult) {
-        // Scanner leállítása és törlése
         qrScanner.stop().then(() => {
             qrScanner.clear();
             qrScanner = null;
@@ -1533,18 +1532,15 @@ function openQR() {
         });
 
         closeQR();
-
-        // Automatikus átirányítás
-        // Ha nem linknek tűnik, akkor is megpróbáljuk megnyitni
         window.location.href = decodedText;
     }
 
     function onScanFailure(error) {
-        // ide nem kell semmi, csak csendben próbálkozik tovább
+        // csendben próbálkozik tovább
     }
 
     qrScanner.start(
-        { facingMode: "environment" }, // hátlapi kamera, ha van
+        { facingMode: "environment" },
         config,
         onScanSuccess,
         onScanFailure
@@ -1652,7 +1648,6 @@ function vibrateTap() {
 
 /* INIT */
 document.addEventListener("DOMContentLoaded", function(){
-    // AUTO-PIN SKIP – max. 1 hétig
     const pinOK   = localStorage.getItem("omsz_pin_verified");
     const pinTime = localStorage.getItem("omsz_pin_time");
     if (pinOK === "true" && pinTime) {
@@ -1667,7 +1662,6 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     }
 
-    // Téma betöltés
     const saved = localStorage.getItem("omsz_theme");
     const prefersDark = window.matchMedia &&
         window.matchMedia("(prefers-color-scheme: dark)").matches;
