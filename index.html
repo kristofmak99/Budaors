@@ -1545,18 +1545,40 @@ function openChecklistForm(type){
 
 // GÉPKOCSI
 function openCars(){
+    function openCarForm(type, id){
+    let url = "";
+
+    if (type === "book") {
+        // ... ide maradnak a gépkocsi könyv URL-ek ...
+    } else if (type === "fuel") {
+        // tankolás URL-ek
+        if (id === "278") url = "https://forms.gle/Q8K8PgssBQBzUp2C6";
+        if (id === "02")  url = "https://forms.gle/81sH5bsQUripFDpa9";
+        if (id === "81")  url = "https://forms.gle/k6kaZfjogATSrq2G7";
+        if (id === "25")  url = "https://forms.gle/cqufZCo7iGdYGGfX7";
+
+        // tankolásnál NE iframe-be töltsd, hanem új fülön:
+        if (url) {
+            window.open(url, "_blank");
+            return;
+        }
+    }
+
+    if (!url) {
+        alert("Ehhez a menüponthoz még nincs beállítva link.");
+        return;
+    }
+
     const fr   = document.getElementById("carFrame");
     const book = document.getElementById("carMenuBook");
     const fuel = document.getElementById("carMenuFuel");
 
     if (fr && book && fuel) {
-        fr.style.display = "none";
-        fr.src = "";
-        book.style.display = "flex";
+        book.style.display = "none";
         fuel.style.display = "none";
+        fr.style.display   = "block";
+        fr.src = url;
     }
-    setCarTab('book');
-    showModal("carsModal");
 }
 
 function closeCars(){
