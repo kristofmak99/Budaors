@@ -779,10 +779,29 @@
             Dolgozói telefonkönyv
             <div class="modal-close" onclick="closeStaffPhones()">×</div>
         </div>
-        <div class="phone-list">
-            <!-- IDE ÍRHATSZ TETSZŐLEGES DOLGOZÓI LISTÁT -->
 
-            <div class="phone-item">
+        <!-- KERESŐ -->
+        <input 
+            id="staffSearch"
+            type="text" 
+            placeholder="Keresés névre vagy beosztásra..."
+            oninput="filterStaff()"
+            style="
+                width: 90%;
+                margin: 10px auto 6px auto;
+                padding: 8px 12px;
+                border-radius: 10px;
+                border: 1px solid #ccc;
+                font-size: 15px;
+                display: block;
+                box-sizing: border-box;
+            "
+        />
+
+        <div class="phone-list staff-list">
+            <!-- IDE ÍROD A DOLGOZÓKAT -->
+
+            <div class="phone-item staff-item">
                 <div class="phone-name">Példa Dolgozó</div>
                 <div class="phone-role">Beosztás / Részleg</div>
                 <div class="phone-number">
@@ -1768,6 +1787,27 @@ function filterHospitals() {
     items.forEach(item => {
         const nameEl = item.querySelector(".hospital-name");
         const text = nameEl ? nameEl.textContent.toLowerCase() : "";
+        item.style.display = text.includes(query) ? "" : "none";
+    });
+}
+
+// DOLGOZÓI TELEFONKÖNYV KERESŐ
+function filterStaff() {
+    const input = document.getElementById("staffSearch");
+    if (!input) return;
+
+    const query = input.value.toLowerCase();
+    const items = document.querySelectorAll(".staff-item");
+
+    items.forEach(item => {
+        const nameEl = item.querySelector(".phone-name");
+        const roleEl = item.querySelector(".phone-role");
+
+        const text = (
+            (nameEl ? nameEl.textContent : "") + " " +
+            (roleEl ? roleEl.textContent : "")
+        ).toLowerCase();
+
         item.style.display = text.includes(query) ? "" : "none";
     });
 }
