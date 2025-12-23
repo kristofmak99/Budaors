@@ -614,6 +614,18 @@
             <div class="tile-label">Telefonszámok</div>
         </div>
 
+         <!-- ÚJ: Dolgozói telefonkönyv -->
+        <div class="tile" onclick="openStaffPhones()">
+            <div class="tile-icon">📇</div>
+            <div class="tile-label">Dolgozói telefonkönyv</div>
+        </div>
+
+        <!-- ÚJ: Gyakran használt linkek -->
+        <div class="tile" onclick="openLinks()">
+            <div class="tile-icon">🔗</div>
+            <div class="tile-label">Gyakran használt linkek</div>
+        </div>
+        
         <div class="tile" onclick="openHelp()">
             <div class="tile-icon">📚</div>
             <div class="tile-label">Segédletek</div>
@@ -756,6 +768,47 @@
                 <div class="phone-number"><a href="tel:+3613116000">+36 1 311 6000</a></div>
                 <div class="phone-number"><a href="tel:+3613913661">+36 1 391 3661</a></div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- DOLGOZÓI TELEFONKÖNYV MODAL -->
+<div id="staffPhonesModal" class="modal-bg">
+    <div class="modal-window">
+        <div class="modal-header">
+            Dolgozói telefonkönyv
+            <div class="modal-close" onclick="closeStaffPhones()">×</div>
+        </div>
+        <div class="phone-list">
+            <!-- IDE ÍRHATSZ TETSZŐLEGES DOLGOZÓI LISTÁT -->
+
+            <div class="phone-item">
+                <div class="phone-name">Példa Dolgozó</div>
+                <div class="phone-role">Beosztás / Részleg</div>
+                <div class="phone-number">
+                    <a href="tel:+3612345678">+36 1 234 5678</a>
+                </div>
+            </div>
+
+            <!-- További dolgozók ide... -->
+        </div>
+    </div>
+</div>
+
+<!-- GYAKRAN HASZNÁLT LINKEK MODAL -->
+<div id="linksModal" class="modal-bg">
+    <div class="modal-window">
+        <div class="modal-header">
+            Gyakran használt linkek
+            <div class="modal-close" onclick="closeLinks()">×</div>
+        </div>
+        <div class="modal-menu">
+            <!-- Itt nyugodtan cseréld # -t a saját linkekre -->
+
+            <a class="menu-btn" href="#" target="_blank">Levelezés</a>
+            <a class="menu-btn" href="#" target="_blank">Oktatási portál</a>
+            <a class="menu-btn" href="#" target="_blank">DocPortál</a>
+            <a class="menu-btn" href="#" target="_blank">Önkiszolgáló jelszóportál</a>
         </div>
     </div>
 </div>
@@ -1717,6 +1770,22 @@ function filterHospitals() {
         const text = nameEl ? nameEl.textContent.toLowerCase() : "";
         item.style.display = text.includes(query) ? "" : "none";
     });
+}
+
+// DOLGOZÓI TELEFONKÖNYV
+function openStaffPhones(){ 
+    showModal("staffPhonesModal"); 
+}
+function closeStaffPhones(){ 
+    hideModal("staffPhonesModal"); 
+}
+
+// GYAKRAN HASZNÁLT LINKEK
+function openLinks(){ 
+    showModal("linksModal"); 
+}
+function closeLinks(){ 
+    hideModal("linksModal"); 
 }
 
 // SZERVIZ
