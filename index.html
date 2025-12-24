@@ -1112,6 +1112,36 @@
     </div>
 </div>
 
+<!-- NAPI KOCSIJELENTÉS MODAL -->
+<div id="dailyReportModal" class="modal-bg">
+    <div class="modal-window">
+        <div class="modal-header">
+            Napi kocsijelentés
+            <div class="modal-close" onclick="closeDailyReport()">×</div>
+        </div>
+        <iframe
+            id="dailyReportFrame"
+            class="modal-content"
+            src="https://docs.google.com/forms/d/e/1FAIpQLSdrmklL4QmPAQKD3BQ2632NoUjV44Ss3ynDxRSGWYbEspuN2Q/viewform">
+        </iframe>
+    </div>
+</div>
+
+<!-- ÁTPAKOLÁS MODAL -->
+<div id="transferModal" class="modal-bg">
+    <div class="modal-window">
+        <div class="modal-header">
+            Átpakolás
+            <div class="modal-close" onclick="closeTransfer()">×</div>
+        </div>
+        <iframe
+            id="transferFrame"
+            class="modal-content"
+            src="https://forms.gle/IDE_JÖN_A_ATPAKOLAS_URL">
+        </iframe>
+    </div>
+</div>
+
 <!-- AKTUÁLIS MODAL -->
 <div id="aktualisModal" class="modal-bg">
     <div class="modal-window">
@@ -2091,6 +2121,22 @@ function filterStaff() {
 
         item.style.display = text.includes(query) ? "" : "none";
     });
+}
+
+// NAPI KOCSIJELENTÉS
+function openDailyReport(){
+    showModal("dailyReportModal");
+}
+function closeDailyReport(){
+    hideModal("dailyReportModal");
+}
+
+// ÁTPAKOLÁS
+function openTransfer(){
+    showModal("transferModal");
+}
+function closeTransfer(){
+    hideModal("transferModal");
 }
 
 // DOLGOZÓI TELEFONKÖNYV
