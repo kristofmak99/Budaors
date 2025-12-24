@@ -588,21 +588,14 @@
             <div class="tile-label">Kórházak</div>
         </div>
 
+         <div class="tile" onclick="openDailyReport()">
+            <div class="tile-icon">📝</div>
+            <div class="tile-label">Napi kocsijelentés</div>
+        </div>
+
         <div class="tile" onclick="openPhones()">
             <div class="tile-icon">📞</div>
             <div class="tile-label">Telefonszámok</div>
-        </div>
-
-         <!-- ÚJ: Dolgozói telefonkönyv -->
-        <div class="tile" onclick="openStaffPhones()">
-            <div class="tile-icon">📇</div>
-            <div class="tile-label">Dolgozói telefonkönyv</div>
-        </div>
-
-        <!-- ÚJ: Gyakran használt linkek -->
-        <div class="tile" onclick="openLinks()">
-            <div class="tile-icon">🔗</div>
-            <div class="tile-label">Gyakran használt linkek</div>
         </div>
         
         <div class="tile" onclick="openHelp()">
@@ -615,14 +608,31 @@
             <div class="tile-label">Aktuális</div>
         </div>
 
-        <div class="tile" onclick="openService()">
-            <div class="tile-icon">🛠️</div>
-            <div class="tile-label">Szerviz</div>
-        </div>
-
         <div class="tile" onclick="window.location.href='https://sztm.mentok.hu'">
             <div class="tile-icon">⏱️</div>
             <div class="tile-label">SZTM</div>
+        </div>
+
+        <div class="tile" onclick="openTransfer()">
+            <div class="tile-icon">📦</div>
+            <div class="tile-label">Átpakolás</div>
+        </div>
+
+            <!-- ÚJ: Dolgozói telefonkönyv -->
+        <div class="tile" onclick="openStaffPhones()">
+            <div class="tile-icon">📇</div>
+            <div class="tile-label">Dolgozói telefonkönyv</div>
+        </div>
+
+        <!-- ÚJ: Gyakran használt linkek -->
+        <div class="tile" onclick="openLinks()">
+            <div class="tile-icon">🔗</div>
+            <div class="tile-label">Gyakran használt linkek</div>
+        </div>
+
+          <div class="tile" onclick="openService()">
+            <div class="tile-icon">🛠️</div>
+            <div class="tile-label">Szerviz</div>
         </div>
     </div>
 
@@ -1944,6 +1954,32 @@ function openCarForm(type, id){
         fr.style.display   = "block";
         fr.src = url;
     }
+}
+
+// NAPI KOCSIJELENTÉS – Google Forms új fülön
+function openDailyReport() {
+    // IDE ÍRD BE A VALÓDI FORM LINKET
+    const url = "https://docs.google.com/forms/d/e/1FAIpQLSdrmklL4QmPAQKD3BQ2632NoUjV44Ss3ynDxRSGWYbEspuN2Q/viewform";
+
+    if (!url || url.includes("IDE_JÖN_A_LINK")) {
+        alert("Ehhez a menüponthoz még nincs beállítva link. Az openDailyReport() függvénynél tudod megadni.");
+        return;
+    }
+
+    window.open(url, "_blank");
+}
+
+// ÁTPAKOLÁS – Google Forms új fülön
+function openTransfer() {
+    // IDE ÍRD BE A VALÓDI FORM LINKET
+    const url = "https://forms.gle/IDE_JÖN_A_LINK";
+
+    if (!url || url.includes("IDE_JÖN_A_LINK")) {
+        alert("Ehhez a menüponthoz még nincs beállítva link. Az openTransfer() függvénynél tudod megadni.");
+        return;
+    }
+
+    window.open(url, "_blank");
 }
 
 // TELEFONOK
