@@ -537,6 +537,21 @@
         flex-direction: column;
         gap: 10px;
     }
+
+    /* Gyakran használt linkek – legyenek kék színűek, mint a többi link */
+    #linksModal .menu-btn {
+        color: var(--accent);
+        background: transparent;
+        border: none;
+        text-decoration: underline;
+        text-align: left;
+    }
+    
+    /* Dark módban világosabb kék */
+    body.dark #linksModal .menu-btn {
+        color: #90c8ff;
+    }
+    
 </style>
 </head>
 
