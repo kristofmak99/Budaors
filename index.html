@@ -696,7 +696,6 @@
             <div id="carMenuBook" class="car-menu-list">
                 <button class="menu-btn" onclick="openCarForm('book','278')">MA 00-278</button>
                 <button class="menu-btn" onclick="openCarForm('book','02')">MA 12-02</button>
-                <button class="menu-btn" onclick="openCarForm('book','81')">MA 10-81</button>
                 <button class="menu-btn" onclick="openCarForm('book','25')">MA 08-25</button>
             </div>
 
@@ -704,7 +703,6 @@
             <div id="carMenuFuel" class="car-menu-list" style="display:none;">
                 <button class="menu-btn" onclick="openCarForm('fuel','278')">MA 00-278 – tankolás</button>
                 <button class="menu-btn" onclick="openCarForm('fuel','02')">MA 12-02 – tankolás</button>
-                <button class="menu-btn" onclick="openCarForm('fuel','81')">MA 10-81 – tankolás</button>
                 <button class="menu-btn" onclick="openCarForm('fuel','25')">MA 08-25 – tankolás</button>
             </div>
         </div>
@@ -1723,8 +1721,8 @@
         </div>
 
         <div id="serviceMenu" class="modal-menu">
-            <button class="menu-btn" onclick="openServiceItem('PROFILE')">Profil hibajegy</button>
-            <button class="menu-btn" onclick="openServiceItem('ACCIDENT')">Baleseti bejelentő</button>
+            <button class="menu-btn" onclick="openServiceItem('PROFILE')">Profile hibajegy</button>
+            <button class="menu-btn" onclick="openServiceItem('ACCIDENT')">Baleseti / Káreseti bejelentő</button>
             <button class="menu-btn" onclick="openServiceItem('GLASS')">Üvegkár</button>
             <button class="menu-btn" onclick="openServiceItem('SERVICE')">Szerviz / karbantartás</button>
         </div>
@@ -1917,12 +1915,10 @@ function openCarForm(type, id){
     if (type === "book") {
         if (id === "278") url = "https://forms.gle/Co9V5kjtstLp7RZZ8";
         if (id === "02")  url = "https://forms.gle/qeNUNcabFssW7XwG6";
-        if (id === "81")  url = "https://forms.gle/PXbT3xYCjSvEUz577";
         if (id === "25")  url = "https://forms.gle/tEoNKyCsLfkdiwk88";
     } else if (type === "fuel") {
         if (id === "278") url = "https://forms.gle/Q8K8PgssBQBzUp2C6";
         if (id === "02")  url = "https://forms.gle/81sH5bsQUripFDpa9";
-        if (id === "81")  url = "https://forms.gle/k6kaZfjogATSrq2G7";
         if (id === "25")  url = "https://forms.gle/cqufZCo7iGdYGGfX7";
     }
 
@@ -2097,11 +2093,11 @@ function openServiceItem(type){
     let url = "";
 
     if (type === "PROFILE") {
-        // url = "https://forms.gle/.....";
+        url = "https://www.mentogyar.hu/#/vehicle-login";
     } else if (type === "ACCIDENT") {
-        // url = "https://forms.gle/.....";
+        url = "https://intranet.mentok.hu/helyek/fesznyilv/_layouts/15/start.aspx#/Lists/Baleset_bejelento_adatlap/AllItems.aspx";
     } else if (type === "GLASS") {
-        // url = "https://forms.gle/.....";
+        url = "https://intranet.mentok.hu/helyek/fesznyilv/_layouts/15/start.aspx#/Lists/Gepjarmu_uvegkar_bejelento/AllItems.aspx";
     } else if (type === "SERVICE") {
         // url = "https://forms.gle/.....";
     }
