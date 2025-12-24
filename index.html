@@ -537,20 +537,6 @@
         flex-direction: column;
         gap: 10px;
     }
-
-    /* Gyakran használt linkek – legyenek kék színűek, mint a többi link */
-    #linksModal .menu-btn {
-        color: var(--accent);
-        background: transparent;
-        border: none;
-        text-decoration: underline;
-        text-align: left;
-    }
-    
-    /* Dark módban világosabb kék */
-    body.dark #linksModal .menu-btn {
-        color: #90c8ff;
-    }
     
 </style>
 </head>
@@ -1064,7 +1050,7 @@
     </div>
 </div>
 
- <!-- GYAKRAN HASZNÁLT LINKEK MODAL -->
+<!-- GYAKRAN HASZNÁLT LINKEK MODAL -->
 <div id="linksModal" class="modal-bg">
     <div class="modal-window">
         <div class="modal-header">
@@ -1072,34 +1058,26 @@
             <div class="modal-close" onclick="closeLinks()">×</div>
         </div>
 
-        <div class="modal-menu" id="quickLinksMenu">
-            <a class="menu-btn" 
-               href="https://mail.mentok.hu/" 
-               target="_blank" 
-               rel="noopener noreferrer">
+        <div id="quickLinksMenu" class="modal-menu">
+            <button class="menu-btn"
+                    onclick="window.open('https://mail.mentok.hu/', '_blank')">
                 Levelezés
-            </a>
+            </button>
 
-            <a class="menu-btn" 
-               href="https://oktatas.mentok.hu/" 
-               target="_blank" 
-               rel="noopener noreferrer">
+            <button class="menu-btn"
+                    onclick="window.open('https://oktatas.mentok.hu/', '_blank')">
                 Oktatási portál
-            </a>
+            </button>
 
-            <a class="menu-btn" 
-               href="https://docportal.mentok.hu/" 
-               target="_blank" 
-               rel="noopener noreferrer">
+            <button class="menu-btn"
+                    onclick="window.open('https://docportal.mentok.hu/', '_blank')">
                 DocPortál
-            </a>
+            </button>
 
-            <a class="menu-btn" 
-               href="https://jelszo.mentok.hu/pwm/private/login" 
-               target="_blank" 
-               rel="noopener noreferrer">
+            <button class="menu-btn"
+                    onclick="window.open('https://jelszo.mentok.hu/pwm/private/login', '_blank')">
                 Önkiszolgáló jelszóportál
-            </a>
+            </button>
         </div>
     </div>
 </div>
