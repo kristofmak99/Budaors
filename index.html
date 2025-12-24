@@ -2099,6 +2099,7 @@ function openServiceItem(type){
     } else if (type === "GLASS") {
         url = "https://intranet.mentok.hu/helyek/fesznyilv/_layouts/15/start.aspx#/Lists/Gepjarmu_uvegkar_bejelento/AllItems.aspx";
     } else if (type === "SERVICE") {
+        // majd ha lesz link:
         // url = "https://forms.gle/.....";
     }
 
@@ -2107,15 +2108,13 @@ function openServiceItem(type){
         return;
     }
 
-    const menu = document.getElementById("serviceMenu");
-    const fr   = document.getElementById("serviceFrame");
-    if (menu && fr) {
-        menu.style.display = "none";
-        fr.style.display   = "block";
-        fr.src = url;
-    }
-}
+    // ÚJ: mindig külön fülön nyitjuk
+    window.open(url, "_blank");
 
+    // opcionális: a modált zárhatjuk is
+    closeService();
+}
+    
 /* BADGE – BEOSZTÁS KÉRÉS */
 function updateRequestBadge() {
     const badge = document.getElementById("requestBadge");
