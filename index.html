@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+j<!DOCTYPE html>
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
@@ -683,6 +683,7 @@
             <button class="menu-btn" onclick="openChecklistForm('ALS')">ALS</button>
             <button class="menu-btn" onclick="openChecklistForm('BLS1')">BLS I</button>
             <button class="menu-btn" onclick="openChecklistForm('BLS2')">BLS II</button>
+            <button class="menu-btn" onclick="openChecklistForm('CSERE')">Csereautó</button>
         </div>
         <iframe id="checklistFrame" class="modal-content" style="display:none;"></iframe>
     </div>
@@ -708,6 +709,7 @@
                 <button class="menu-btn" onclick="openCarForm('book','278')">MA 00-278</button>
                 <button class="menu-btn" onclick="openCarForm('book','02')">MA 12-02</button>
                 <button class="menu-btn" onclick="openCarForm('book','25')">MA 08-25</button>
+                <button class="menu-btn" onclick="openCarForm('book','CSERE')">Csereautó</button>
             </div>
 
             <!-- TANKOLÁS LISTA -->
@@ -715,6 +717,7 @@
                 <button class="menu-btn" onclick="openCarForm('fuel','278')">MA 00-278 – tankolás</button>
                 <button class="menu-btn" onclick="openCarForm('fuel','02')">MA 12-02 – tankolás</button>
                 <button class="menu-btn" onclick="openCarForm('fuel','25')">MA 08-25 – tankolás</button>
+                <button class="menu-btn" onclick="openCarForm('fuel','CSERE')">Csereautó</button>
             </div>
         </div>
 
@@ -1885,6 +1888,8 @@ function openChecklistForm(type){
         url = "https://forms.gle/WywTeGfGYnRnbUXr8";
     if (type === "BLS2")
         url = "https://forms.gle/2SDngn8Pn9opvTKo9";
+    if (type === "CSERE")
+        url = "https://forms.gle/Ug5AzYWqkmdqUTi4A";
 
     const menu = document.getElementById("checklistMenu");
     const fr   = document.getElementById("checklistFrame");
@@ -1949,10 +1954,12 @@ function openCarForm(type, id){
         if (id === "278") url = "https://forms.gle/Co9V5kjtstLp7RZZ8";
         if (id === "02")  url = "https://forms.gle/qeNUNcabFssW7XwG6";
         if (id === "25")  url = "https://forms.gle/tEoNKyCsLfkdiwk88";
+        if (id === "CSERE") url = "https://forms.gle/3dNAAKcmK7MaH9it8";
     } else if (type === "fuel") {
         if (id === "278") url = "https://forms.gle/Q8K8PgssBQBzUp2C6";
         if (id === "02")  url = "https://forms.gle/81sH5bsQUripFDpa9";
         if (id === "25")  url = "https://forms.gle/cqufZCo7iGdYGGfX7";
+        if (id === "CSERE") url = "https://forms.gle/yXELrJQ9Tih4XSYY6";
     }
 
     if (!url) {
